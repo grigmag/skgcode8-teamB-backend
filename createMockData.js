@@ -11,9 +11,11 @@ const createMockData = async () => {
       firstName: 'Test' + i,
       lastName: 'User',
       healthIdNumber: i,
+      birthDate: Date.now(),
       email: `testuser${i}@test.com`,
       phoneNumber: '+30697123456' + i,
       bloodType: 'A-',
+      familyDoctorId: i + 526, //change to fetched id
     });
   }
 
