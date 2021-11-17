@@ -11,6 +11,11 @@ app.use(express.json());
 
 const createMockData = require('./createMockData');
 const User = require('./models/user');
+const Prescription = require('./models/prescription');
+const Appointment = require('./models/appointment');
+const Diagnosis = require('./models/diagnosis');
+
+const authorizeToken = require('./middlewares/tokenAuth');
 
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
   console.log('Database connected: ', process.env.DB_URL);
@@ -25,19 +30,28 @@ mongoose.connection.on('error', (err) => {
   console.error('connection error: ', err);
 });
 
-app.get('/', (req, res) => {
+app.get('/', authorizeToken, (req, res) => {
   res.send('Hello world!');
 });
 
-app.get('/users/:id', async (req, res) => {
-  const userInfo = await User.findById(req.params.id);
-  res.send(userInfo);
-});
-
-// app.get('/users/:id/', async (req, res) => {
-//   const userInfo = await User.findById(req.params.id);
-//   res.send(userInfo);
+// for development, comment out in production
+// app.get('/test', async (req, res) => {
+//
 // });
+
+app.get('/users/:id', authorizeToken, async (req, res) => {
+  if (req.user) {
+    if (req.user.id === req.params.id) {
+      res.send(req.user);
+    } else {
+      res
+        .status(401)
+        .send('Unauthorized to access this user profile or invalid user id');
+    }
+  } else {
+    res.status(401).send('You are not logged in');
+  }
+});
 
 app.post('/register', async (req, res) => {
   const { healthIdNumber, password } = req.body;
@@ -70,7 +84,7 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
   const { healthIdNumber, password } = req.body;
 
-  const user = await User.find({ healthIdNumber, password });
+  const user = await User.findOne({ healthIdNumber, password });
   if (user) {
     const token = jwt.sign({ id: user.id }, process.env.API_SECRET, {
       expiresIn: '1d',
@@ -86,7 +100,57 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.post('/reset-password', async (req, res) => {});
+app.post('/reset-password', authorizeToken, async (req, res) => {
+  res.send('Reset Password');
+});
+
+app.get('/services/prescriptions', authorizeToken, async (req, res) => {
+  if (req.user) {
+    const user = req.user;
+    const userPrescriptions = await Prescription.find({ userId: user.id });
+    res.send(userPrescriptions);
+  } else {
+    res
+      .status(401)
+      .send(
+        `Unauthorized to access this user's prescriptions or invalid user id`
+      );
+  }
+});
+
+app.get('/services/diagnoses', authorizeToken, async (req, res) => {
+  if (req.user) {
+    const user = req.user;
+    const userDiagnosis = await Diagnosis.find({ userId: user.id });
+    res.send(userDiagnosis);
+  } else {
+    res
+      .status(401)
+      .send(`Unauthorized to access this user's diagnoses or invalid user id`);
+  }
+});
+
+app.get('/services/appointments', authorizeToken, async (req, res) => {
+  if (req.user) {
+    const user = req.user;
+    const userAppointments = await Appointment.find({ userId: user.id });
+    res.send(userAppointments);
+  } else {
+    res
+      .status(401)
+      .send(
+        `Unauthorized to access this user's appointments or invalid user id`
+      );
+  }
+});
+
+app.post(
+  '/services/doctors-appointments/schedule',
+  authorizeToken,
+  async (req, res) => {
+    res.send('Schedule Appointment');
+  }
+);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
