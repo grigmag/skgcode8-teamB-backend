@@ -6,11 +6,10 @@ const createMockData = async () => {
 
   for (let i = 0; i < 10; i++) {
     await User.create({
-      username: 'testUser' + i,
+      healthIdNumber: 100 + i,
       password: 'asdfasdf',
       firstName: 'Test' + i,
       lastName: 'User',
-      healthIdNumber: i,
       birthDate: Date.now(),
       email: `testuser${i}@test.com`,
       phoneNumber: '+30697123456' + i,

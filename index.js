@@ -20,6 +20,7 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
 
   createMockData();
 });
+
 mongoose.connection.on('error', (err) => {
   console.error('connection error: ', err);
 });
@@ -33,13 +34,18 @@ app.get('/users/:id', async (req, res) => {
   res.send(userInfo);
 });
 
-app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+// app.get('/users/:id/', async (req, res) => {
+//   const userInfo = await User.findById(req.params.id);
+//   res.send(userInfo);
+// });
 
-  const user = await User.find({ username, password });
+app.post('/register', async (req, res) => {
+  const { healthIdNumber, password } = req.body;
+
+  const user = await User.find({ healthIdNumber, password });
   if (user) {
     const user = await new User({
-      username: req.body.username,
+      healthIdNumber: req.body.healthIdNumber,
       email: req.body.email,
       password: req.body.password,
     });
@@ -62,9 +68,9 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { healthIdNumber, password } = req.body;
 
-  const user = await User.find({ username, password });
+  const user = await User.find({ healthIdNumber, password });
   if (user) {
     const token = jwt.sign({ id: user.id }, process.env.API_SECRET, {
       expiresIn: '1d',
@@ -76,9 +82,11 @@ app.post('/login', async (req, res) => {
   } else {
     return res
       .status(404)
-      .send({ message: 'Username or password is invalid.' });
+      .send({ message: 'healthIdNumber or password is invalid.' });
   }
 });
+
+app.post('/reset-password', async (req, res) => {});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
