@@ -14,6 +14,38 @@ router.get('/profile', authorizeToken, async (req, res) => {
   }
 });
 
+router.put('/profile', authorizeToken, async (req, res) => {
+  const {
+    healthIdNumber,
+    firstName,
+    lastName,
+    birthDate,
+    email,
+    phoneNumber,
+    bloodType,
+    familyDoctorId,
+  } = req.body;
+
+  const user = await User.findOne({ healthIdNumber });
+  if (user) {
+    const updateProfile = await User.updateOne(
+      { healthIdNumber },
+      {
+        firstName,
+        lastName,
+        birthDate,
+        email,
+        phoneNumber,
+        bloodType,
+        familyDoctorId,
+      }
+    );
+    res.send(updateProfile);
+  } else {
+    res.sendStatus(404);
+  }
+});
+
 router.post('/register', async (req, res) => {
   const { healthIdNumber, password, email } = req.body;
 
@@ -63,8 +95,19 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post('/reset-password', authorizeToken, async (req, res) => {
-  res.send('Reset Password');
+router.put('/reset-password', authorizeToken, async (req, res) => {
+  const { healthIdNumber, password } = req.body;
+
+  const user = await User.findOne({ healthIdNumber });
+  if (user) {
+    const updatePassword = await User.updateOne(
+      { healthIdNumber },
+      { password }
+    );
+    res.send(updatePassword);
+  } else {
+    res.sendStatus(404);
+  }
 });
 
 module.exports = router;

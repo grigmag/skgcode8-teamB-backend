@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  healthIdNumber: Number,
-  password: String,
+  healthIdNumber: { type: String, required: true },
+  password: { type: String, required: true },
   firstName: String,
   lastName: String,
   birthDate: Date,
-  email: String,
+  email: { type: String, required: true },
   phoneNumber: String,
   bloodType: String,
   familyDoctorId: String,
