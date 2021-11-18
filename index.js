@@ -30,8 +30,8 @@ mongoose.connection.on('error', (err) => {
   console.error('connection error: ', err);
 });
 
-app.get('/', authorizeToken, (req, res) => {
-  res.send('Hello world!');
+app.get('/', (req, res) => {
+  res.send('Welcome to HealthApp API!');
 });
 
 // for development, comment out in production
@@ -39,32 +39,26 @@ app.get('/', authorizeToken, (req, res) => {
 //
 // });
 
-app.get('/users/:id', authorizeToken, async (req, res) => {
+app.get('/profile', authorizeToken, async (req, res) => {
   if (req.user) {
-    if (req.user.id === req.params.id) {
-      res.send(req.user);
-    } else {
-      res
-        .status(401)
-        .send('Unauthorized to access this user profile or invalid user id');
-    }
+    res.send(req.user);
   } else {
     res.status(401).send('You are not logged in');
   }
 });
 
 app.post('/register', async (req, res) => {
-  const { healthIdNumber, password } = req.body;
+  const { healthIdNumber, password, email } = req.body;
 
-  const user = await User.find({ healthIdNumber, password });
-  if (user) {
-    const user = await new User({
-      healthIdNumber: req.body.healthIdNumber,
-      email: req.body.email,
-      password: req.body.password,
+  const user = await User.findOne({ healthIdNumber });
+  if (!user) {
+    const newUser = await new User({
+      healthIdNumber,
+      email,
+      password,
     });
 
-    user.save((err, user) => {
+    newUser.save((err, user) => {
       if (err) {
         res.status(500).send({
           message: err,
@@ -77,7 +71,9 @@ app.post('/register', async (req, res) => {
       }
     });
   } else {
-    return res.status(500).send({ message: 'User already exists.' });
+    return res
+      .status(400)
+      .send({ message: 'User with this healthIdNumber already exists.' });
   }
 });
 
@@ -106,41 +102,42 @@ app.post('/reset-password', authorizeToken, async (req, res) => {
 
 app.get('/services/prescriptions', authorizeToken, async (req, res) => {
   if (req.user) {
-    const user = req.user;
-    const userPrescriptions = await Prescription.find({ userId: user.id });
-    res.send(userPrescriptions);
+    try {
+      const userPrescriptions = await Prescription.find({
+        userId: req.user.id,
+      });
+      res.send(userPrescriptions);
+    } catch (err) {
+      res.sendStatus(500);
+    }
   } else {
-    res
-      .status(401)
-      .send(
-        `Unauthorized to access this user's prescriptions or invalid user id`
-      );
+    res.status(401).send('You are not logged in');
   }
 });
 
 app.get('/services/diagnoses', authorizeToken, async (req, res) => {
   if (req.user) {
-    const user = req.user;
-    const userDiagnosis = await Diagnosis.find({ userId: user.id });
-    res.send(userDiagnosis);
+    try {
+      const userDiagnoses = await Diagnosis.find({ userId: req.user.id });
+      res.send(userDiagnoses);
+    } catch (err) {
+      res.sendStatus(500);
+    }
   } else {
-    res
-      .status(401)
-      .send(`Unauthorized to access this user's diagnoses or invalid user id`);
+    res.status(401).send('You are not logged in');
   }
 });
 
 app.get('/services/appointments', authorizeToken, async (req, res) => {
   if (req.user) {
-    const user = req.user;
-    const userAppointments = await Appointment.find({ userId: user.id });
-    res.send(userAppointments);
+    try {
+      const userAppointments = await Appointment.find({ userId: req.user.id });
+      res.send(userAppointments);
+    } catch (err) {
+      res.sendStatus(500);
+    }
   } else {
-    res
-      .status(401)
-      .send(
-        `Unauthorized to access this user's appointments or invalid user id`
-      );
+    res.status(401).send('You are not logged in');
   }
 });
 
