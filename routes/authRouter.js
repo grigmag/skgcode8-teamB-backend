@@ -40,7 +40,7 @@ router.put('/profile', authorizeToken, async (req, res) => {
         familyDoctorId,
       }
     );
-    res.send(updateProfile);
+    res.send('Profile updated successfully');
   } else {
     res.sendStatus(404);
   }
@@ -104,7 +104,7 @@ router.put('/reset-password', authorizeToken, async (req, res) => {
       { healthIdNumber },
       { password }
     );
-    res.send(updatePassword);
+    res.send('Password updated successfully');
   } else {
     res.sendStatus(404);
   }
