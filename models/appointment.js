@@ -10,8 +10,6 @@ const appointmentSchema = new Schema({
   doctorId: String,
 });
 
-
-
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 
 module.exports = Appointment;
