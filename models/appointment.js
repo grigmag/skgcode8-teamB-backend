@@ -7,10 +7,8 @@ const appointmentSchema = new Schema({
   description: String,
   completed: Boolean,
   hospital: String,
-  doctorId: String
+  doctorId: String,
 });
-
-
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 

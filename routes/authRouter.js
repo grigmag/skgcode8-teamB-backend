@@ -4,75 +4,43 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 
 const authorizeToken = require('../middlewares/tokenAuth');
+const { logError, handleError } = require('../middlewares/errorHandling');
 const User = require('../models/user');
 
 router.get('/profile', authorizeToken, async (req, res) => {
-  if (req.user) {
-    res.send(req.user);
-  } else {
-    res.status(401).send('You are not logged in');
+  res.send(req.user);
+});
+
+router.put('/profile', authorizeToken, async (req, res, next) => {
+  try {
+    Object.assign(req.user, req.body);
+    req.user.save();
+
+    res.status(200).send('Profile updated successfully');
+  } catch (err) {
+    next(err);
   }
 });
 
-router.put('/profile', authorizeToken, async (req, res) => {
-  const {
-    healthIdNumber,
-    firstName,
-    lastName,
-    birthDate,
-    email,
-    phoneNumber,
-    bloodType,
-    familyDoctorId,
-  } = req.body;
-
-  const user = await User.findOne({ healthIdNumber });
-  if (user) {
-    const updateProfile = await User.updateOne(
-      { healthIdNumber },
-      {
-        firstName,
-        lastName,
-        birthDate,
-        email,
-        phoneNumber,
-        bloodType,
-        familyDoctorId,
-      }
-    );
-    res.send('Profile updated successfully');
-  } else {
-    res.sendStatus(404);
-  }
-});
-
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
   const { healthIdNumber, password, email } = req.body;
 
   const user = await User.findOne({ healthIdNumber });
   if (!user) {
-    const newUser = await new User({
-      healthIdNumber,
-      email,
-      password,
-    });
-
-    newUser.save((err, user) => {
-      if (err) {
-        res.status(500).send({
-          message: err,
-        });
-        return;
-      } else {
-        res.status(200).send({
-          message: 'User Registered successfully',
-        });
-      }
-    });
+    try {
+      await User.create({
+        healthIdNumber,
+        email,
+        password,
+      });
+      res.send('User Registered successfully');
+    } catch (err) {
+      next(err);
+    }
   } else {
     return res
       .status(400)
-      .send({ message: 'User with this healthIdNumber already exists.' });
+      .send('User with this healthIdNumber already exists.');
   }
 });
 
@@ -89,25 +57,20 @@ router.post('/login', async (req, res) => {
       .status(200)
       .send({ user, message: 'Login Successful', accessToken: token });
   } else {
-    return res
-      .status(404)
-      .send({ message: 'healthIdNumber or password is invalid.' });
+    return res.status(404).send('Health ID number or password is invalid.');
   }
 });
 
-router.put('/reset-password', authorizeToken, async (req, res) => {
-  const { healthIdNumber, password } = req.body;
-
-  const user = await User.findOne({ healthIdNumber });
-  if (user) {
-    const updatePassword = await User.updateOne(
-      { healthIdNumber },
-      { password }
-    );
-    res.send('Password updated successfully');
-  } else {
-    res.sendStatus(404);
+router.put('/reset-password', authorizeToken, async (req, res, next) => {
+  try {
+    Object.assign(req.user, req.body);
+    req.user.save();
+    res.status(200).send('Password updated successfully');
+  } catch (err) {
+    next(err);
   }
 });
+
+router.use(logError, handleError);
 
 module.exports = router;

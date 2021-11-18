@@ -12,7 +12,7 @@ const createMockData = async () => {
 
   const testUsersAmount = 10;
   const testUsers = await User.find({ firstName: 'Test' });
-  if (!testUsers.length === testUsersAmount) {
+  if (testUsers.length !== testUsersAmount) {
     for (let i = 0; i < testUsersAmount; i++) {
       await User.create({
         healthIdNumber: 100 + i,
@@ -54,6 +54,7 @@ const createMockData = async () => {
       });
     }
   }
+
 
   const prescriptions = await Prescription.find();
   const appointments = await Appointment.find();

@@ -10,6 +10,7 @@ const authorizeToken = async (req, res, next) => {
         const user = await User.findById(decoded.id);
         if (user) {
           req.user = user;
+          return next();
         }
       } catch (err) {
         // error handling....
@@ -17,7 +18,7 @@ const authorizeToken = async (req, res, next) => {
     }
   }
 
-  return next();
+  return res.status(401).send('You are not logged in');
 };
 
 module.exports = authorizeToken;
