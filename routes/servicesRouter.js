@@ -40,7 +40,22 @@ router.get('/appointments', async (req, res, next) => {
 });
 
 router.post('/appointments/schedule', async (req, res) => {
-  res.send('Schedule Appointment');
+  console.log(req.body);
+  const { date, hospital } = req.body;
+  if (date && hospital) {
+    try {
+      await Appointment.create({
+        userId: req.user.id,
+        date: date,
+        description: 'Test Appointment Description ',
+        completed: false,
+        hospital: hospital,
+      });
+      res.status(200).send('Appointment scheduled');
+    } catch (err) {
+      res.send(err.message);
+    }
+  }
 });
 
 router.use(logError, handleError);

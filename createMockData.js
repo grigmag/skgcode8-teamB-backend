@@ -43,7 +43,7 @@ const createMockData = async () => {
       await Appointment.create({
         userId: users[i].id,
         date: Date.now(),
-        description: 'Prescription Description ' + j + 1,
+        description: 'Appointment Description ' + j + 1,
         completed: true,
       });
 
