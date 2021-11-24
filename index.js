@@ -9,6 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const createMockData = require('./createMockData');
+const createHospitalData = require('./createHospitalData');
 const servicesRouter = require('./routes/servicesRouter');
 const authRouter = require('./routes/authRouter');
 
@@ -19,6 +20,7 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
   // console.log(collections);
 
   createMockData();
+  createHospitalData();
 });
 
 mongoose.connection.on('error', (err) => {

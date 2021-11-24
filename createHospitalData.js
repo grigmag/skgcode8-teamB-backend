@@ -1,38 +1,49 @@
-/*
-    const mongoose = require('mongoose');
-    const Hospital = require('./models/hospital');
+const mongoose = require('mongoose');
+const Hospital = require('./models/hospital');
 
-    createHospitalData = () => {
-        await mongoose.connection.dropCollection('hospitals');
+const randomDates = () => {
+  const start = new Date();
+  const end = new Date(2021, 11, 31);
+  let dates = [];
+  for (let i = 0; i < 3; i++) {
+    const date = new Date(
+      start.getTime() + Math.random() * (end.getTime() - start.getTime())
+    );
+    dates[i] = date;
+  }
+  return dates;
+};
 
-        const testHospitalsAmount = 10;
-        const testHospitals = await Hospital.find({ address: "Tsimiski" });
-        if (testHospitals.length !== testHospitalsAmount) {
-            for (let i = 0; i < testHospitalsAmount; i++) {
-                for (let j = 0; j < 3; j++) {
-                    await Hospital.create({
-                        code: "General Hospital",
-                        name: `Hospital ${i}`,
-                        departments: {
-                            Cardiology: {
-                                availableHours: [new Date('December 17, 2021 03:24:00'),new Date('December 21, 2021 03:24:00'),new Date('December 28, 2021 03:24:00')],
-                                doctors: []
-                            };
-                            Neurology: {
-                                availableHours: [Date.now(),Date.now(),Date.now()],
-                                doctors: []
-                            },
-                            Orthopaedics: {
-                                availableHours: [Date.now(),Date.now(),Date.now()],
-                                doctors: []
-                            }
-                        },
-                        phoneNumber: "0900696969"
-                        address: "Tsimiski",
-                    });
-                }
-            }
-        }
+createHospitalData = async () => {
+  await mongoose.connection.dropCollection('hospitals');
+
+  const testHospitalsAmount = 10;
+  const testHospitals = await Hospital.find({ code: 'General Hospital' });
+  if (testHospitals.length !== testHospitalsAmount) {
+    for (let i = 0; i < testHospitalsAmount; i++) {
+      await Hospital.create({
+        code: 'General Hospital',
+        name: `Hospital ${i}`,
+        departments: {
+          Cardiology: {
+            availableHours: randomDates(),
+            doctors: ['Kaila Rimmer', 'Jayla Lyndon', 'Willie Gibb'],
+          },
+          Neurology: {
+            availableHours: randomDates(),
+            doctors: ['Kelli Dudley', 'Katey Monday', 'Rodolph Mottershead'],
+          },
+          Orthopaedics: {
+            availableHours: randomDates(),
+            doctors: ['Andi Colbert', 'Callahan Lindsay', 'Val Rickard'],
+          },
+        },
+        phoneNumber: '0900696969',
+        address: 'Tsimiski',
+      });
     }
+  }
+  const hospitals = await Hospital.find();
+};
 
-*/
+module.exports = createHospitalData;

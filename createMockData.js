@@ -55,7 +55,6 @@ const createMockData = async () => {
     }
   }
 
-
   const prescriptions = await Prescription.find();
   const appointments = await Appointment.find();
   const diagnoses = await Diagnosis.find();
