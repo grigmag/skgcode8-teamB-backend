@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Hospital = require('./models/hospital');
 
+// const departments = ['Cardiology', 'Neurology', 'Orthopaedics'];
+
 const randomDates = () => {
   const start = new Date();
   const end = new Date(2021, 11, 31);
