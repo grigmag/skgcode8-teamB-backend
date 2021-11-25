@@ -3,11 +3,10 @@ const Schema = mongoose.Schema;
 
 const appointmentSchema = new Schema({
   userId: mongoose.SchemaTypes.ObjectId,
+  doctorId: mongoose.SchemaTypes.ObjectId,
   date: Date,
-  description: String,
-  completed: Boolean,
   hospital: String,
-  doctorId: String,
+  department: String,
 });
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);

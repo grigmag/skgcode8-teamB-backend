@@ -3,8 +3,10 @@ const Schema = mongoose.Schema;
 
 const diagnosisSchema = new Schema({
   userId: mongoose.SchemaTypes.ObjectId,
+  doctorId: mongoose.SchemaTypes.ObjectId,
   date: Date,
-  description: String,
+  examination: String,
+  results: String,
   diagnosis: String,
 });
 
