@@ -24,20 +24,20 @@ createHospitalData = async () => {
       await Hospital.create({
         code: 'General Hospital',
         name: `Hospital ${i}`,
-        departments: {
-          Cardiology: {
-            availableHours: randomDates(),
+        departments: [
+          {
+            name: 'Cardiology',
             doctors: ['Kaila Rimmer', 'Jayla Lyndon', 'Willie Gibb'],
           },
-          Neurology: {
-            availableHours: randomDates(),
+          {
+            name: 'Neurology',
             doctors: ['Kelli Dudley', 'Katey Monday', 'Rodolph Mottershead'],
           },
-          Orthopaedics: {
-            availableHours: randomDates(),
+          {
+            name: 'Orthopaedics',
             doctors: ['Andi Colbert', 'Callahan Lindsay', 'Val Rickard'],
           },
-        },
+        ],
         phoneNumber: '0900696969',
         address: 'Tsimiski',
       });

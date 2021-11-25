@@ -62,13 +62,14 @@ const createMockData = async () => {
   const testDoctors = await Doctor.find({ firstName: 'Test' });
   if (testDoctors.length !== testDoctorsAmount) {
     const getHospitalId = async (index) => {
-      const hospitalId = await Hospital.findOne({
+      const hospital = await Hospital.findOne({
         name: `Hospital ${index}`,
       });
-      console.log('hospital id: ', hospitalId.id);
-      return hospitalId.id;
+      return hospital.id;
     };
+
     getHospitalId(1);
+
     for (let i = 0; i < testDoctorsAmount; i++) {
       await Doctor.create({
         firstName: 'Test',
@@ -86,11 +87,11 @@ const createMockData = async () => {
   const diagnoses = await Diagnosis.find();
   const doctors = await Doctor.find();
 
-  console.log('users:', users);
   // console.log('prescriptions:', prescriptions);
   // console.log('appointments:', appointments);
   // console.log('Diagnoses:', diagnoses);
   // console.log('Doctors: ', doctors);
+  console.log('users:', users);
 };
 
 module.exports = createMockData;
