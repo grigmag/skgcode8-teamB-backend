@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const hospitalSchema = new Schema({
   name: String,
-  departments: [{ name: String, doctorIds: [mongoose.SchemaTypes.ObjectId] }],
+  departments: [{ name: String, doctorIds: [Schema.Types.ObjectId] }],
   address: String,
   phoneNumber: String,
 });

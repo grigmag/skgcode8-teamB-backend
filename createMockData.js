@@ -86,11 +86,11 @@ const createMockData = async () => {
   const diagnoses = await Diagnosis.find();
   const doctors = await Doctor.find();
 
-  // console.log('users:', users);
+  console.log('users:', users);
   // console.log('prescriptions:', prescriptions);
   // console.log('appointments:', appointments);
   // console.log('Diagnoses:', diagnoses);
-  console.log('Doctors: ', doctors);
+  // console.log('Doctors: ', doctors);
 };
 
 module.exports = createMockData;
