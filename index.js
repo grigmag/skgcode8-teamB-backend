@@ -19,8 +19,10 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
   // const collections = await mongoose.connection.db.listCollections().toArray();
   // console.log(collections);
 
-  // createMockData();
-  // createHospitalData();
+  if (process.env.CREATE_MOCK_DATA === 'true') {
+    createMockData();
+    createHospitalData();
+  }
 });
 
 mongoose.connection.on('error', (err) => {
