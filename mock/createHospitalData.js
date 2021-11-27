@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Hospital = require('./models/hospital');
+const Hospital = require('../models/hospital');
 
 // const departments = ['Cardiology', 'Neurology', 'Orthopaedics'];
 

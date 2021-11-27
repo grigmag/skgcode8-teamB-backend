@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const User = require('./models/user');
-const Prescription = require('./models/prescription');
-const Appointment = require('./models/appointment');
-const Diagnosis = require('./models/diagnosis');
-const Hospital = require('./models/hospital');
-const Doctor = require('./models/doctor');
+const User = require('../models/user');
+const Prescription = require('../models/prescription');
+const Appointment = require('../models/appointment');
+const Diagnosis = require('../models/diagnosis');
+const Hospital = require('../models/hospital');
+const Doctor = require('../models/doctor');
 
 const createMockData = async () => {
   // await mongoose.connection.dropCollection('users');
@@ -16,6 +16,10 @@ const createMockData = async () => {
   const testUsersAmount = 10;
   const testUsers = await User.find({ firstName: 'Test' });
   if (testUsers.length !== testUsersAmount) {
+    for (const testUser of testUsers) {
+      await User.findByIdAndDelete(testUser.id);
+    }
+
     for (let i = 0; i < testUsersAmount; i++) {
       await User.create({
         healthIdNumber: 100 + i,
@@ -82,10 +86,10 @@ const createMockData = async () => {
     }
   }
 
-  const prescriptions = await Prescription.find();
-  const appointments = await Appointment.find();
-  const diagnoses = await Diagnosis.find();
-  const doctors = await Doctor.find();
+  // const prescriptions = await Prescription.find();
+  // const appointments = await Appointment.find();
+  // const diagnoses = await Diagnosis.find();
+  // const doctors = await Doctor.find();
 
   // console.log('prescriptions:', prescriptions);
   // console.log('appointments:', appointments);

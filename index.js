@@ -5,11 +5,8 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-const createMockData = require('./createMockData');
-const createHospitalData = require('./createHospitalData');
+const createMockData = require('./mock/createMockData');
+const createHospitalData = require('./mock/createHospitalData');
 const servicesRouter = require('./routes/servicesRouter');
 const authRouter = require('./routes/authRouter');
 
@@ -28,6 +25,9 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
 mongoose.connection.on('error', (err) => {
   console.error('connection error: ', err);
 });
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('Welcome to HealthApp API!');
