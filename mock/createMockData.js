@@ -6,6 +6,8 @@ const Diagnosis = require('../models/diagnosis');
 const Hospital = require('../models/hospital');
 const Doctor = require('../models/doctor');
 
+const { createUsers } = require('./createUsers');
+
 const createMockData = async () => {
   // await mongoose.connection.dropCollection('users');
   await mongoose.connection.dropCollection('prescriptions');
@@ -13,27 +15,7 @@ const createMockData = async () => {
   await mongoose.connection.dropCollection('diagnoses');
   await mongoose.connection.dropCollection('doctors');
 
-  const testUsersAmount = 10;
-  const testUsers = await User.find({ firstName: 'Test' });
-  if (testUsers.length !== testUsersAmount) {
-    for (const testUser of testUsers) {
-      await User.findByIdAndDelete(testUser.id);
-    }
-
-    for (let i = 0; i < testUsersAmount; i++) {
-      await User.create({
-        healthIdNumber: 100 + i,
-        password: 'asdfasdf',
-        firstName: 'Test',
-        lastName: 'User' + i,
-        birthDate: Date.now(),
-        email: `testuser${i}@test.com`,
-        phoneNumber: '+30697123456' + i,
-        bloodType: 'A-',
-        familyDoctorId: i + 526, //change to fetched id
-      });
-    }
-  }
+  await createUsers();
 
   const users = await User.find();
 
