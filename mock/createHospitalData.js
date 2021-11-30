@@ -3,18 +3,18 @@ const Hospital = require('../models/hospital');
 
 // const departments = ['Cardiology', 'Neurology', 'Orthopaedics'];
 
-const randomDates = () => {
-  const start = new Date();
-  const end = new Date(2021, 11, 31);
-  let dates = [];
-  for (let i = 0; i < 3; i++) {
-    const date = new Date(
-      start.getTime() + Math.random() * (end.getTime() - start.getTime())
-    );
-    dates[i] = date;
-  }
-  return dates;
-};
+// const randomDates = () => {
+//   const start = new Date();
+//   const end = new Date(2021, 11, 31);
+//   let dates = [];
+//   for (let i = 0; i < 3; i++) {
+//     const date = new Date(
+//       start.getTime() + Math.random() * (end.getTime() - start.getTime())
+//     );
+//     dates[i] = date;
+//   }
+//   return dates;
+// };
 
 createHospitalData = async () => {
   await mongoose.connection.dropCollection('hospitals');
