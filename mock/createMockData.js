@@ -3,10 +3,10 @@ const User = require('../models/user');
 const Prescription = require('../models/prescription');
 const Appointment = require('../models/appointment');
 const Diagnosis = require('../models/diagnosis');
-const Hospital = require('../models/hospital');
 const Doctor = require('../models/doctor');
 
 const { createUsers } = require('./createUsers');
+const { createDoctors } = require('./createDoctors');
 
 const createMockData = async () => {
   // await mongoose.connection.dropCollection('users');
@@ -19,7 +19,8 @@ const createMockData = async () => {
 
   const users = await User.find();
 
-  
+  await createDoctors();
+  const doctors = await Doctor.find();
 
   for (let i = 0; i < users.length; i++) {
     for (let j = 0; j < 3; j++) {
@@ -34,19 +35,21 @@ const createMockData = async () => {
       await Appointment.create({
         userId: users[i].id,
         date: Date.now(),
-        description: 'Appointment Description ' + j + 1,
-        completed: true,
-      });
+        doctorId: doctors[i].id,
+        hospital: `Hospital ${i}`,
+        department: 'Cardiology',
+      })
 
       await Diagnosis.create({
         userId: users[i].id,
+        doctorId: doctors[i].id,
         date: Date.now(),
         result: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        examination: 'Examination Title',
+        diagnosis: 'Diagnosis',
       });
     }
   }
-
-  await createDoctors();
 
   // const prescriptions = await Prescription.find();
   // const appointments = await Appointment.find();
