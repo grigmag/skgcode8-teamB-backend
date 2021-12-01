@@ -1,10 +1,13 @@
 const Hospital = require('../models/hospital');
 const Doctor = require('../models/doctor');
 
-async function createDoctors() {
-  const testDoctorsAmount = 5;
+async function createDoctors(testDoctorsAmount = 5) {
   const testDoctors = await Doctor.find({ firstName: 'Test' });
   if (testDoctors.length !== testDoctorsAmount) {
+    for (const testDoctor of testDoctors) {
+      await Doctor.findByIdAndDelete(testDoctor.id);
+    }
+
     const getHospitalId = async (index) => {
       const hospital = await Hospital.findOne({
         name: `Hospital ${index}`,

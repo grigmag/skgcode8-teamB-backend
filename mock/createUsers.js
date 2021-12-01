@@ -1,8 +1,7 @@
 const User = require('../models/user');
 const Doctor = require('../models/doctor');
 
-const createUsers = async () => {
-  const testUsersAmount = 10;
+const createUsers = async (testUsersAmount = 10) => {
   const testUsers = await User.find({ firstName: 'Test' });
   if (testUsers.length !== testUsersAmount) {
     for (const testUser of testUsers) {

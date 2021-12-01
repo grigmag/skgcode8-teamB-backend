@@ -16,8 +16,8 @@ const createMockData = async () => {
   await mongoose.connection.dropCollection('diagnoses');
   await mongoose.connection.dropCollection('doctors');
 
-  await createDoctors();
-  await createUsers();
+  await createDoctors(5);
+  await createUsers(10);
 
   const users = await User.find();
 
