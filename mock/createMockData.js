@@ -6,8 +6,8 @@ const Diagnosis = require('../models/diagnosis');
 const Doctor = require('../models/doctor');
 const Hospital = require('../models/hospital');
 
-const { createUsers } = require('./createUsers');
-const { createDoctors } = require('./createDoctors');
+const createUsers = require('./createUsers');
+const createDoctors = require('./createDoctors');
 
 const createMockData = async () => {
   // await mongoose.connection.dropCollection('users');

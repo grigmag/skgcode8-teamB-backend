@@ -5,12 +5,10 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 
-const createMockData = require('./mock/createMockData');
-const createDoctors = require('./mock/createDoctors');
-const createHospitalData = require('./mock/createHospitalData');
 const servicesRouter = require('./routes/servicesRouter');
 const authRouter = require('./routes/authRouter');
 
+const createMockData = require('./mock/createMockData');
 const dropAllCollections = require('./dropAllCollections');
 
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
@@ -19,14 +17,12 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
   // const collections = await mongoose.connection.db.listCollections().toArray();
   // console.log(collections);
 
-  // dropAllCollections();
+  if (process.env.DROP_DB === 'true') {
+    await dropAllCollections();
+  }
 
-  createHospitalData();
-  createMockData();
   if (process.env.CREATE_MOCK_DATA === 'true') {
-    createDoctors();
-    createHospitalData();
-    createMockData();
+    await createMockData();
   }
 });
 

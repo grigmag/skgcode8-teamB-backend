@@ -25,4 +25,4 @@ async function createDoctors() {
   }
 }
 
-module.exports = { createDoctors };
+module.exports = createDoctors;
