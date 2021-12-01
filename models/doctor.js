@@ -8,6 +8,7 @@ const doctorSchema = new Schema({
   address: String,
   specialty: String,
   hospitalId: Schema.Types.ObjectId,
+  department: String,
 });
 
 const Doctor = mongoose.model('Doctor', doctorSchema);
