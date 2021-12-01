@@ -10,7 +10,7 @@ const userSchema = new Schema({
   email: { type: String, required: true, lowercase: true },
   phoneNumber: String,
   bloodType: String,
-  familyDoctorId: String,
+  familyDoctorId: Schema.Types.ObjectId,
 });
 
 const User = mongoose.model('User', userSchema);

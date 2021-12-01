@@ -16,7 +16,7 @@ const Hospital = require('../models/hospital');
 //   return dates;
 // };
 
-createHospitalData = async () => {
+const createHospitalData = async () => {
   await mongoose.connection.dropCollection('hospitals');
 
   const testHospitalsAmount = 10;
@@ -41,7 +41,8 @@ createHospitalData = async () => {
           },
         ],
         phoneNumber: '0900696969',
-        address: 'Tsimiski',
+        address: `Tsimiski ${i + 1}`,
+        city: 'Thessaloniki',
       });
     }
   }

@@ -40,7 +40,6 @@ router.get('/appointments', async (req, res, next) => {
 });
 
 router.post('/appointments/schedule', async (req, res) => {
-  console.log(req.body);
   const { date, hospital } = req.body;
   if (date && hospital) {
     try {

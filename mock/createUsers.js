@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Doctor = require('../models/doctor');
 
 const createUsers = async () => {
   const testUsersAmount = 10;
@@ -7,6 +8,8 @@ const createUsers = async () => {
     for (const testUser of testUsers) {
       await User.findByIdAndDelete(testUser.id);
     }
+    const doctors = await Doctor.find();
+    console.log('USER DOCTORS', doctors);
 
     for (let i = 0; i < testUsersAmount; i++) {
       await User.create({
@@ -18,7 +21,7 @@ const createUsers = async () => {
         email: `testuser${i}@test.com`,
         phoneNumber: '+30697123456' + i,
         bloodType: 'A-',
-        familyDoctorId: i + 526, //change to fetched id
+        familyDoctorId: doctors[i], //change to fetched id
       });
     }
   }

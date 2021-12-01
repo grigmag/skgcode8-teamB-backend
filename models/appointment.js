@@ -5,7 +5,7 @@ const appointmentSchema = new Schema({
   userId: Schema.Types.ObjectId,
   doctorId: Schema.Types.ObjectId,
   date: Date,
-  hospital: String,
+  hospital: Schema.Types.ObjectId,
   department: String,
 });
 

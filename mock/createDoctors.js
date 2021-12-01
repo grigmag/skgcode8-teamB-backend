@@ -1,7 +1,7 @@
 const Hospital = require('../models/hospital');
 const Doctor = require('../models/doctor');
 
-const createDoctors = async () => {
+async function createDoctors() {
   const testDoctorsAmount = 5;
   const testDoctors = await Doctor.find({ firstName: 'Test' });
   if (testDoctors.length !== testDoctorsAmount) {
@@ -9,7 +9,7 @@ const createDoctors = async () => {
       const hospital = await Hospital.findOne({
         name: `Hospital ${index}`,
       });
-      return hospital.id;
+      return hospital;
     };
 
     for (let i = 0; i < testDoctorsAmount; i++) {
@@ -23,6 +23,6 @@ const createDoctors = async () => {
       });
     }
   }
-};
+}
 
 module.exports = { createDoctors };
