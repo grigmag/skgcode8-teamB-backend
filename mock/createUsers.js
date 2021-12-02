@@ -1,5 +1,4 @@
 const User = require('../models/user');
-const Doctor = require('../models/doctor');
 const { randomArrayElement } = require('./randomUtils');
 
 const createUsers = async (testUsersAmount = 10, familyDoctorIds = []) => {
@@ -8,7 +7,6 @@ const createUsers = async (testUsersAmount = 10, familyDoctorIds = []) => {
     for (const testUser of testUsers) {
       await User.findByIdAndDelete(testUser.id);
     }
-    const doctors = await Doctor.find();
 
     for (let i = 0; i < testUsersAmount; i++) {
       await User.create({

@@ -30,13 +30,16 @@ const createMockData = async () => {
   );
 
   const users = await User.find();
-  console.log(users);
+  // console.log(users);
 
-  await createHospitalData(10);
+  await createHospitalData(5);
+
+  const hospitals = await Hospital.find();
+  // console.log(hospitals);
+
   await createDoctors(5);
 
   const doctors = await Doctor.find();
-  const hospitals = await Hospital.find();
 
   for (let i = 0; i < users.length; i++) {
     for (let j = 0; j < 3; j++) {
