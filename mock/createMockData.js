@@ -6,22 +6,34 @@ const Diagnosis = require('../models/diagnosis');
 const Doctor = require('../models/doctor');
 const Hospital = require('../models/hospital');
 
-const createHospitalData = require('./createHospitalData');
+const createFamilyDoctors = require('./createFamilyDoctors');
 const createUsers = require('./createUsers');
+const createHospitalData = require('./createHospitalData');
 const createDoctors = require('./createDoctors');
+const { familyDoctorSpecialty } = require('./dataUtils');
 
 const createMockData = async () => {
   // await mongoose.connection.dropCollection('users');
   await mongoose.connection.dropCollection('prescriptions');
   await mongoose.connection.dropCollection('appointments');
   await mongoose.connection.dropCollection('diagnoses');
-  // await mongoose.connection.dropCollection('doctors');
+  await mongoose.connection.dropCollection('doctors');
+
+  await createFamilyDoctors(3);
+
+  const familyDoctors = await Doctor.find({ specialty: familyDoctorSpecialty });
+  // console.log(familyDoctors);
+
+  await createUsers(
+    10,
+    familyDoctors.map((doctor) => doctor.id)
+  );
+
+  const users = await User.find();
+  console.log(users);
 
   await createHospitalData(10);
   await createDoctors(5);
-  await createUsers(10);
-
-  const users = await User.find();
 
   const doctors = await Doctor.find();
   const hospitals = await Hospital.find();

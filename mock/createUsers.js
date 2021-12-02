@@ -1,7 +1,8 @@
 const User = require('../models/user');
 const Doctor = require('../models/doctor');
+const { randomArrayElement } = require('./randomUtils');
 
-const createUsers = async (testUsersAmount = 10) => {
+const createUsers = async (testUsersAmount = 10, familyDoctorIds = []) => {
   const testUsers = await User.find({ firstName: 'Test' });
   if (testUsers.length !== testUsersAmount) {
     for (const testUser of testUsers) {
@@ -19,7 +20,9 @@ const createUsers = async (testUsersAmount = 10) => {
         email: `testuser${i}@test.com`,
         phoneNumber: '+30697123456' + i,
         bloodType: 'A-',
-        familyDoctorId: doctors[i], //change to fetched id
+        familyDoctorId: familyDoctorIds.length
+          ? randomArrayElement(familyDoctorIds)
+          : null, // ?
       });
     }
   }

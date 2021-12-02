@@ -13,7 +13,7 @@ async function createDoctors(testDoctorsAmount = 5) {
         name: `Hospital ${index}`,
       });
       if (hospital) {
-        console.log(hospital.id);
+        // console.log(hospital.id);
         return hospital.id;
       }
     };
