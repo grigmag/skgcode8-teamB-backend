@@ -20,11 +20,21 @@ const specialtiesAndDepartments = [
 const departments = specialtiesAndDepartments.map((entry) => entry.department);
 const specialties = specialtiesAndDepartments.map((entry) => entry.specialty);
 
+const specialtyToDepartment = (function () {
+  const obj = {};
+  specialtiesAndDepartments.forEach((entry) => {
+    obj[entry.specialty] = entry.department;
+  });
+
+  return obj;
+})();
+
 const familyDoctorSpecialty = 'Family Doctor';
 
 module.exports = {
   specialtiesAndDepartments,
   departments,
   specialties,
+  specialtyToDepartment,
   familyDoctorSpecialty,
 };

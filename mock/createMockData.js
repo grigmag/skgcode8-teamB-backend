@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const User = require('../models/user');
 const Prescription = require('../models/prescription');
 const Appointment = require('../models/appointment');
@@ -10,15 +9,13 @@ const createFamilyDoctors = require('./createFamilyDoctors');
 const createUsers = require('./createUsers');
 const createHospitalData = require('./createHospitalData');
 const createDoctors = require('./createDoctors');
+const createPrescriptions = require('./createPrescriptions');
+const createDiagnoses = require('./createDiagnoses');
+const createAppointments = require('./createAppointments');
+
 const { familyDoctorSpecialty } = require('./dataUtils');
 
 const createMockData = async () => {
-  // await mongoose.connection.dropCollection('users');
-  await mongoose.connection.dropCollection('prescriptions');
-  await mongoose.connection.dropCollection('appointments');
-  await mongoose.connection.dropCollection('diagnoses');
-  await mongoose.connection.dropCollection('doctors');
-
   await createFamilyDoctors(3);
 
   const familyDoctors = await Doctor.find({ specialty: familyDoctorSpecialty });
@@ -45,40 +42,32 @@ const createMockData = async () => {
   const allDoctors = await Doctor.find();
   // console.log(allDoctors);
 
-  for (let i = 0; i < users.length; i++) {
-    for (let j = 0; j < 3; j++) {
-      await Prescription.create({
-        userId: users[i].id,
-        doctorId: allDoctors[i],
-        title: 'Prescription Title ' + j + 1,
-        description: 'Prescription Description ' + j + 1,
-        date: Date.now(),
-        drugCode: j + 11,
-      });
+  await createPrescriptions(
+    100,
+    users.map((user) => user.id),
+    allDoctors.map((doc) => doc.id)
+  );
 
-      await Appointment.create({
-        userId: users[i].id,
-        date: Date.now(),
-        doctorId: allDoctors[i],
-        hospital: hospitals[i],
-        department: 'Cardiology',
-      });
+  const prescriptions = await Prescription.find();
+  // console.log(prescriptions);
 
-      await Diagnosis.create({
-        userId: users[i],
-        doctorId: allDoctors[i],
-        date: Date.now(),
-        results: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        examination: 'Examination Title',
-        diagnosis: 'Diagnosis',
-      });
-    }
-  }
+  await createDiagnoses(
+    100,
+    users.map((user) => user.id),
+    allDoctors.map((doc) => doc.id)
+  );
 
-  // const prescriptions = await Prescription.find();
-  // const appointments = await Appointment.find();
-  // const diagnoses = await Diagnosis.find();
-  // const doctors = await Doctor.find();
+  const diagnoses = await Diagnosis.find();
+  // console.log(diagnoses);
+
+  await createAppointments(
+    100,
+    users.map((user) => user.id),
+    allDoctors
+  );
+
+  const appointments = await Appointment.find();
+  // console.log(appointments);
 
   // console.log('prescriptions:', prescriptions);
   // console.log('appointments:', appointments);
