@@ -22,7 +22,7 @@ const createPrescriptions = async (
         doctorId: doctorIds.length && randomArrayElement(doctorIds),
         title: 'Test Prescription ' + i,
         description: 'Test Prescription Description',
-        drugCode: randomIntArray(0, 9, 8).join(''),
+        drugCode: randomIntArray(8, 0, 9).join(''),
         date: randomDate('2021-01-01'),
       });
     }
