@@ -39,6 +39,39 @@ router.get('/appointments', async (req, res, next) => {
   }
 });
 
+router.get('/appointments/available', async (req, res) => {
+  const requestHospitalId = req.body.hospital;
+
+  const getAvailableAppointments = async (requestHospitalId) => {
+    const bookedAppointments = await Appointment.find({
+      hospitalId: requestHospitalId,
+    });
+
+    if (bookedAppointments) {
+      const bookedAppointmentsData = bookedAppointments.map((appointment) => {
+        return {
+          date: appointment.date,
+          hospital: appointment.hospital.toString(),
+        };
+      });
+
+      const availableAppointments = bookedAppointmentsData.map(
+        (appointment) => {
+          if (appointment.hospital === requestHospitalId) {
+            return appointment.date;
+          }
+        },
+        requestHospitalId
+      );
+
+      return availableAppointments;
+    }
+  };
+
+  const finalAppointments = await getAvailableAppointments(requestHospitalId);
+  res.send(finalAppointments);
+});
+
 router.post('/appointments/schedule', async (req, res) => {
   const { date, hospital } = req.body;
   if (date && hospital) {
