@@ -1,3 +1,5 @@
+const familyDoctorSpecialty = 'Family Doctor';
+
 const doctorSpecialties = [
   'Pediatrician',
   'Gynecologist',
@@ -10,4 +12,4 @@ const doctorSpecialties = [
   'Otolaryngologist',
 ];
 
-module.exports = { doctorSpecialties };
+module.exports = { doctorSpecialties, familyDoctorSpecialty };
