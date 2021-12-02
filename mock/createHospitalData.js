@@ -17,7 +17,6 @@ const Hospital = require('../models/hospital');
 // };
 
 const createHospitalData = async (testHospitalsAmount = 10) => {
-  await mongoose.connection.dropCollection('hospitals');
 
   const testHospitals = await Hospital.find({ code: 'General Hospital' });
   if (testHospitals.length !== testHospitalsAmount) {
