@@ -20,14 +20,12 @@ const randomMobileNumber = () =>
 
 const randomDates = (
   amount,
-  location,
   start = new Date(),
   end = new Date()
 ) => {
   const startDate = typeof start === Object ? start : new Date(start);
   const endDate = typeof end === Object ? end : new Date(end);
 
-  console.log(location, endDate);
   let dates = [];
   for (let i = 0; i < amount; i++) {
     const date = new Date(
