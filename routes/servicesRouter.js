@@ -51,7 +51,7 @@ router.get('/appointments/available', async (req, res) => {
       const bookedAppointmentsData = bookedAppointments.map((appointment) => {
         return {
           date: appointment.date,
-          hospital: appointment.hospital.toString(),
+          hospital: appointment.hospitalId.toString(),
         };
       });
 
