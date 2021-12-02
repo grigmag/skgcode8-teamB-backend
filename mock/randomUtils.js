@@ -18,30 +18,24 @@ const randomPhoneNumber = () =>
 const randomMobileNumber = () =>
   '+3069' + randomArrayElement([0, 3, 7, 8]) + randomIntArray(0, 9, 7).join('');
 
-const randomDates = (
-  amount,
-  start = new Date(),
-  end = new Date()
-) => {
-  const startDate = typeof start === Object ? start : new Date(start);
-  const endDate = typeof end === Object ? end : new Date(end);
+const randomDate = (start = new Date(), end = new Date()) => {
+  const startDate = start instanceof Date ? start : new Date(start);
+  const endDate = end instanceof Date ? end : new Date(end);
 
-  let dates = [];
+  const date = new Date(
+    startDate.getTime() +
+      Math.random() * (endDate.getTime() - startDate.getTime())
+  );
+
+  return date;
+};
+
+const randomDatesArray = (amount, start, end) => {
+  const arr = new Array(amount);
   for (let i = 0; i < amount; i++) {
-    const date = new Date(
-      startDate.getTime() +
-        Math.random() * (endDate.getTime() - startDate.getTime())
-    );
-    dates[i] = date;
+    arr.push(randomDate(start, end));
   }
-
-  if (dates.length < 2) {
-    return dates[0];
-  } else if (dates.lenght >= 2) {
-    return dates;
-  } else {
-    return Date.now();
-  }
+  return arr;
 };
 
 module.exports = {
@@ -50,5 +44,6 @@ module.exports = {
   randomArrayElement,
   randomPhoneNumber,
   randomMobileNumber,
-  randomDates,
+  randomDate,
+  randomDatesArray,
 };

@@ -1,5 +1,5 @@
 const Diagnosis = require('../models/diagnosis');
-const { randomArrayElement, randomDates } = require('./randomUtils');
+const { randomArrayElement, randomDate } = require('./randomUtils');
 
 const createDiagnoses = async (amount = 10, userIds = [], doctorIds = []) => {
   const oldDiagnoses = await Diagnosis.find();
@@ -12,7 +12,7 @@ const createDiagnoses = async (amount = 10, userIds = [], doctorIds = []) => {
       await Diagnosis.create({
         userId: userIds.length && randomArrayElement(userIds),
         doctorId: doctorIds.length && randomArrayElement(doctorIds),
-        date: randomDates(1, 'Diagnoses', '2021-01-01', '2021-12-31'),
+        date: randomDate('2021-01-01', '2021-12-31'),
         examination: 'Test Diagnosis Examination',
         results: 'Test Diagnosis Results',
         diagnosis: 'Test Diagnosis ' + i,

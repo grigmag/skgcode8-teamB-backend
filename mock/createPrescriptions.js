@@ -2,7 +2,7 @@ const Prescription = require('../models/prescription');
 const {
   randomArrayElement,
   randomIntArray,
-  randomDates,
+  randomDate,
 } = require('./randomUtils');
 
 const createPrescriptions = async (
@@ -23,7 +23,7 @@ const createPrescriptions = async (
         title: 'Test Prescription ' + i,
         description: 'Test Prescription Description',
         drugCode: randomIntArray(0, 9, 8).join(''),
-        date: randomDates(1, 'Prescriptions', '2021-01-01'),
+        date: randomDate('2021-01-01'),
       });
     }
   }
