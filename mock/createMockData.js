@@ -6,16 +6,18 @@ const Diagnosis = require('../models/diagnosis');
 const Doctor = require('../models/doctor');
 const Hospital = require('../models/hospital');
 
+const createHospitalData = require('./createHospitalData');
 const createUsers = require('./createUsers');
 const createDoctors = require('./createDoctors');
 
 const createMockData = async () => {
   // await mongoose.connection.dropCollection('users');
-  await mongoose.connection.dropCollection('prescriptions');
-  await mongoose.connection.dropCollection('appointments');
-  await mongoose.connection.dropCollection('diagnoses');
-  await mongoose.connection.dropCollection('doctors');
+  // await mongoose.connection.dropCollection('prescriptions');
+  // await mongoose.connection.dropCollection('appointments');
+  // await mongoose.connection.dropCollection('diagnoses');
+  // await mongoose.connection.dropCollection('doctors');
 
+  await createHospitalData(10);
   await createDoctors(5);
   await createUsers(10);
 
@@ -39,7 +41,7 @@ const createMockData = async () => {
         userId: users[i].id,
         date: Date.now(),
         doctorId: doctors[i],
-        hospital: hospitals[i].id,
+        hospital: hospitals[i],
         department: 'Cardiology',
       });
 

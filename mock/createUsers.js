@@ -8,7 +8,6 @@ const createUsers = async (testUsersAmount = 10) => {
       await User.findByIdAndDelete(testUser.id);
     }
     const doctors = await Doctor.find();
-    console.log('USER DOCTORS', doctors);
 
     for (let i = 0; i < testUsersAmount; i++) {
       await User.create({

@@ -12,7 +12,8 @@ async function createDoctors(testDoctorsAmount = 5) {
       const hospital = await Hospital.findOne({
         name: `Hospital ${index}`,
       });
-      return hospital;
+      console.log(hospital.id);
+      return hospital.id;
     };
 
     for (let i = 0; i < testDoctorsAmount; i++) {

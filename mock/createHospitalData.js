@@ -16,30 +16,16 @@ const Hospital = require('../models/hospital');
 //   return dates;
 // };
 
-const createHospitalData = async () => {
+const createHospitalData = async (testHospitalsAmount = 10) => {
   await mongoose.connection.dropCollection('hospitals');
 
-  const testHospitalsAmount = 10;
   const testHospitals = await Hospital.find({ code: 'General Hospital' });
   if (testHospitals.length !== testHospitalsAmount) {
     for (let i = 0; i < testHospitalsAmount; i++) {
       await Hospital.create({
         code: 'General Hospital',
         name: `Hospital ${i}`,
-        departments: [
-          {
-            name: 'Cardiology',
-            doctors: ['Kaila Rimmer', 'Jayla Lyndon', 'Willie Gibb'],
-          },
-          {
-            name: 'Neurology',
-            doctors: ['Kelli Dudley', 'Katey Monday', 'Rodolph Mottershead'],
-          },
-          {
-            name: 'Orthopaedics',
-            doctors: ['Andi Colbert', 'Callahan Lindsay', 'Val Rickard'],
-          },
-        ],
+        departments: ['Cardiology', 'Neurology', 'Orthopaedics'],
         phoneNumber: '0900696969',
         address: `Tsimiski ${i + 1}`,
         city: 'Thessaloniki',
