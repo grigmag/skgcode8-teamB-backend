@@ -37,15 +37,19 @@ const createMockData = async () => {
   const hospitals = await Hospital.find();
   // console.log(hospitals);
 
-  await createDoctors(5);
+  await createDoctors(
+    10,
+    hospitals.map((hospital) => hospital.id)
+  );
 
-  const doctors = await Doctor.find();
+  const allDoctors = await Doctor.find();
+  // console.log(allDoctors);
 
   for (let i = 0; i < users.length; i++) {
     for (let j = 0; j < 3; j++) {
       await Prescription.create({
         userId: users[i].id,
-        doctorId: doctors[i],
+        doctorId: allDoctors[i],
         title: 'Prescription Title ' + j + 1,
         description: 'Prescription Description ' + j + 1,
         date: Date.now(),
@@ -55,14 +59,14 @@ const createMockData = async () => {
       await Appointment.create({
         userId: users[i].id,
         date: Date.now(),
-        doctorId: doctors[i],
+        doctorId: allDoctors[i],
         hospital: hospitals[i],
         department: 'Cardiology',
       });
 
       await Diagnosis.create({
         userId: users[i],
-        doctorId: doctors[i],
+        doctorId: allDoctors[i],
         date: Date.now(),
         results: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         examination: 'Examination Title',

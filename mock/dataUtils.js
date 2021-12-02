@@ -1,5 +1,3 @@
-const familyDoctorSpecialty = 'Family Doctor';
-
 const specialtiesAndDepartments = [
   { department: 'Pathology', specialty: 'Pathologist' },
   { department: 'Oncology', specialty: 'Oncologist' },
@@ -20,9 +18,13 @@ const specialtiesAndDepartments = [
 ];
 
 const departments = specialtiesAndDepartments.map((entry) => entry.department);
+const specialties = specialtiesAndDepartments.map((entry) => entry.specialty);
+
+const familyDoctorSpecialty = 'Family Doctor';
 
 module.exports = {
   specialtiesAndDepartments,
   departments,
+  specialties,
   familyDoctorSpecialty,
 };
