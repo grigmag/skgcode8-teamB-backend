@@ -47,7 +47,12 @@ const randomDatesArray = (amount, start, end) => {
 
 const randomAppointmentDay = (start, end) => {
   let date = randomDate(start, end);
-  
+  formatDate(date);
+
+  return date;
+};
+
+const formatDate = (date) => {
   if (date.minutes() < 30) {
     date.minutes(0);
   } else {

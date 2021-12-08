@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const moment = require('moment');
 
 const authorizeToken = require('../middlewares/tokenAuth');
 const { logError, handleError } = require('../middlewares/errorHandling');
@@ -41,8 +42,9 @@ router.get('/appointments', async (req, res, next) => {
 
 router.get('/appointments/available', async (req, res) => {
   const requestHospitalId = req.body.hospital;
+  const requestDate = req.body.date;
 
-  const getAvailableAppointments = async (requestHospitalId) => {
+  const getBookedAppointmentsDates = async (requestHospitalId) => {
     const bookedAppointments = await Appointment.find({
       hospitalId: requestHospitalId,
     });
@@ -55,7 +57,7 @@ router.get('/appointments/available', async (req, res) => {
         };
       });
 
-      const availableAppointments = bookedAppointmentsData.map(
+      const bookedAppointmentsDates = bookedAppointmentsData.map(
         (appointment) => {
           if (appointment.hospital === requestHospitalId) {
             return appointment.date;
@@ -64,12 +66,34 @@ router.get('/appointments/available', async (req, res) => {
         requestHospitalId
       );
 
-      return availableAppointments;
+      return bookedAppointmentsDates;
     }
   };
 
-  const finalAppointments = await getAvailableAppointments(requestHospitalId);
-  res.send(finalAppointments);
+  const finalAppointmentsDates = await getBookedAppointmentsDates(
+    requestHospitalId
+  );
+
+  let hours = [];
+  for (let i = 0; i < 24; i++) {
+    for (let j = 0; j <= 1; j++) {
+      hours.push(
+        moment(requestDate)
+          .hour(i)
+          .minutes(0 + j * 30)
+      );
+    }
+  }
+  console.log('Before ', hours.length, hours);
+
+  hours.forEach((hour, index) => {
+    if (finalAppointmentsDates.includes(hour)) {
+      delete hours[index];
+    }
+  });
+  console.log('After', hours.length, hours);
+
+  res.send(finalAppointmentsDates);
 });
 
 router.post('/appointments/schedule', async (req, res) => {
