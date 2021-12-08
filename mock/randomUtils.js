@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 /** Returns a random integer between AND INCLUDING min and max */
 const randomInt = (min, max) =>
   Math.floor(min + Math.random() * (max - min + 1));
@@ -18,25 +20,20 @@ const randomPhoneNumber = () =>
 const randomMobileNumber = () =>
   '+3069' + randomArrayElement([0, 3, 7, 8]) + randomIntArray(7, 0, 9).join('');
 
-const randomDate = (start = new Date(), end = new Date()) => {
+const randomDate = (start = moment(), end = moment()) => {
   const startDate =
-    start instanceof Date
-      ? start
-      : typeof start === 'string'
-      ? new Date(start)
-      : null;
+    typeof start === 'string' ? moment(start) : start.isValid() ? start : null;
 
   const endDate =
-    end instanceof Date ? end : typeof end === 'string' ? new Date(end) : null;
+    typeof end === 'string' ? moment(end) : end.isValid() ? end : null;
 
   if (!startDate || !endDate) {
     throw new Error('wrong date type');
   }
-  const date = new Date(
-    startDate.getTime() +
-      Math.random() * (endDate.getTime() - startDate.getTime())
+  const date = moment(
+    startDate.valueOf() +
+      Math.random() * (endDate.valueOf() - startDate.valueOf())
   );
-
   return date;
 };
 
@@ -48,6 +45,18 @@ const randomDatesArray = (amount, start, end) => {
   return arr;
 };
 
+const randomAppointmentDay = (start, end) => {
+  let date = randomDate(start, end);
+  
+  if (date.minutes() < 30) {
+    date.minutes(0);
+  } else {
+    date.minutes(30);
+  }
+
+  return date;
+};
+
 module.exports = {
   randomInt,
   randomIntArray,
@@ -56,4 +65,5 @@ module.exports = {
   randomMobileNumber,
   randomDate,
   randomDatesArray,
+  randomAppointmentDay,
 };
