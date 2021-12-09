@@ -61,7 +61,7 @@ const createMockData = async () => {
   // console.log(diagnoses);
 
   await createAppointments(
-    100,
+    1000,
     users.map((user) => user.id),
     allDoctors
   );

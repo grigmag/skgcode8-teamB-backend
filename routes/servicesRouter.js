@@ -46,7 +46,7 @@ router.get('/appointments/available', async (req, res) => {
   const startDate = moment(date).startOf('day');
   const endDate = moment(startDate).add(1, 'days');
 
-  const bookedAppointmentTimes = await Appointment.find(
+  const bookedAppointments = await Appointment.find(
     {
       hospitalId,
       department,
@@ -58,7 +58,13 @@ router.get('/appointments/available', async (req, res) => {
     'date'
   );
 
-  console.log('Booked Appointments', bookedAppointmentTimes);
+  // console.log('Booked Appointments', bookedAppointments);
+
+  const bookedAppointmentsDates = bookedAppointments.map((appointment) =>
+    moment(appointment.date)
+  );
+
+  // console.log('Booked Appointment Dates', bookedAppointmentsDates);
 
   const createTimeSlotsArray = (date) => {
     // assuming working hours of  9 - 17
@@ -69,46 +75,27 @@ router.get('/appointments/available', async (req, res) => {
     const tempTime = moment(startTime);
 
     while (tempTime < endTime) {
-      arr.push(tempTime);
+      arr.push(moment(tempTime));
       tempTime.add(30, 'minutes');
     }
 
     return arr;
   };
 
-  const timeSlots = createTimeSlotsArray();
+  const timeSlots = createTimeSlotsArray(date);
+
+  // console.log('timeSlots', timeSlots);
 
   const availableHours = timeSlots
     .filter(
       (slot) =>
-        !bookedAppointmentTimes.some((time) => time.isSame(slot, 'minute'))
+        !bookedAppointmentsDates.some((time) => time.isSame(slot, 'minute'))
     )
     .map((time) => time.format());
 
+  // console.log('availableHours', availableHours);
+
   res.send(availableHours);
-
-  // should be ok!! needs testing
-
-  // let hours = [];
-  // for (let i = 0; i < 24; i++) {
-  //   for (let j = 0; j <= 1; j++) {
-  //     hours.push(
-  //       moment(date)
-  //         .hour(i)
-  //         .minutes(0 + j * 30)
-  //     );
-  //   }
-  // }
-  // console.log('Before ', hours.length, hours);
-
-  // hours.forEach((hour, index) => {
-  //   if (finalAppointmentsDates.includes(hour)) {
-  //     hours.splice(index, 1);
-  //   }
-  // });
-  // console.log('After', hours.length, hours);
-
-  // res.send(finalAppointmentsDates);
 });
 
 router.post('/appointments/schedule', async (req, res) => {
