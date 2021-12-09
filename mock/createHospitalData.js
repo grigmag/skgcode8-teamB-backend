@@ -1,6 +1,6 @@
 const Hospital = require('../models/hospital');
-const { randomPhoneNumber } = require('./randomUtils');
-const { departments } = require('./dataUtils');
+const { randomPhoneNumber } = require('../utils/randomUtils');
+const { departments } = require('../utils/dataUtils');
 
 const createHospitalData = async (amount = 10) => {
   for (let i = 0; i < amount; i++) {

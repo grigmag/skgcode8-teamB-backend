@@ -1,6 +1,6 @@
 const Appointment = require('../models/appointment');
-const { specialtyToDepartment } = require('./dataUtils');
-const { randomArrayElement, randomAppointmentDate } = require('./randomUtils');
+const { specialtyToDepartment } = require('../utils/dataUtils');
+const { randomArrayElement, randomAppointmentDate } = require('../utils/randomUtils');
 
 const createAppointments = async (amount = 10, userIds = [], doctors = []) => {
   for (let i = 0; i < amount; i++) {

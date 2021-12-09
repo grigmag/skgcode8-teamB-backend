@@ -1,10 +1,10 @@
 const Doctor = require('../models/doctor');
-const { specialtiesAndDepartments } = require('./dataUtils');
+const { specialtiesAndDepartments } = require('../utils/dataUtils');
 const {
   randomArrayElement,
   randomPhoneNumber,
   randomInt,
-} = require('./randomUtils');
+} = require('../utils/randomUtils');
 
 async function createDoctors(hospitalIds = []) {
   for (const hospitalId of hospitalIds) {

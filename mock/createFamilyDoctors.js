@@ -1,7 +1,7 @@
 const Doctor = require('../models/doctor');
 
-const { familyDoctorSpecialty } = require('./dataUtils');
-const { randomMobileNumber } = require('./randomUtils');
+const { familyDoctorSpecialty } = require('../utils/dataUtils');
+const { randomMobileNumber } = require('../utils/randomUtils');
 
 const createFamilyDoctors = async (amount = 3) => {
   for (let i = 0; i < amount; i++) {

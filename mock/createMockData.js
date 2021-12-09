@@ -13,7 +13,7 @@ const createPrescriptions = require('./createPrescriptions');
 const createDiagnoses = require('./createDiagnoses');
 const createAppointments = require('./createAppointments');
 
-const { familyDoctorSpecialty } = require('./dataUtils');
+const { familyDoctorSpecialty } = require('../utils/dataUtils');
 
 const createMockData = async () => {
   await createFamilyDoctors(3);

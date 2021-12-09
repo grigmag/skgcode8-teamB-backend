@@ -3,7 +3,7 @@ const {
   randomArrayElement,
   randomIntArray,
   randomDate,
-} = require('./randomUtils');
+} = require('../utils/randomUtils');
 
 const createPrescriptions = async (
   amount = 10,

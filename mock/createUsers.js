@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const { randomArrayElement, randomDate } = require('./randomUtils');
+const { randomArrayElement, randomDate } = require('../utils/randomUtils');
 
 const createUsers = async (testUsersAmount = 10, familyDoctorIds = []) => {
   for (let i = 0; i < testUsersAmount; i++) {

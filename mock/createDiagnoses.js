@@ -1,5 +1,5 @@
 const Diagnosis = require('../models/diagnosis');
-const { randomArrayElement, randomDate } = require('./randomUtils');
+const { randomArrayElement, randomDate } = require('../utils/randomUtils');
 
 const createDiagnoses = async (amount = 10, userIds = [], doctorIds = []) => {
   for (let i = 0; i < amount; i++) {
