@@ -5,13 +5,11 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-const createMockData = require('./createMockData');
-const createHospitalData = require('./createHospitalData');
 const servicesRouter = require('./routes/servicesRouter');
 const authRouter = require('./routes/authRouter');
+
+const createMockData = require('./mock/createMockData');
+const dropAllCollections = require('./dropAllCollections');
 
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
   console.log('Database connected: ', process.env.DB_URL);
@@ -19,16 +17,21 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
   // const collections = await mongoose.connection.db.listCollections().toArray();
   // console.log(collections);
 
-  // createMockData();
-  // createHospitalData();
+  if (process.env.CREATE_MOCK_DATA === 'true') {
+    await dropAllCollections();
+    await createMockData();
+  }
 });
 
 mongoose.connection.on('error', (err) => {
   console.error('connection error: ', err);
 });
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.get('/', (req, res) => {
-  res.send('Welcome to HealthApp API!');
+  res.send({ message: 'Welcome to HealthApp API!' });
 });
 
 app.use('/', authRouter);

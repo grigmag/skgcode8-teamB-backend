@@ -18,7 +18,7 @@ const authorizeToken = async (req, res, next) => {
     }
   }
 
-  return res.status(401).send('You are not logged in');
+  return res.status(401).send({ message: 'You are not logged in' });
 };
 
 module.exports = authorizeToken;

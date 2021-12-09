@@ -2,15 +2,25 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  healthIdNumber: { type: String, required: true },
-  password: { type: String, required: true },
+  healthIdNumber: {
+    type: String,
+    required: [true, 'health id number is required'],
+  },
+  password: {
+    type: String,
+    required: [true, 'password is required'],
+  },
   firstName: String,
   lastName: String,
   birthDate: Date,
-  email: { type: String, required: true, lowercase: true },
+  email: {
+    type: String,
+    required: [true, 'email is required'],
+    lowercase: true,
+  },
   phoneNumber: String,
   bloodType: String,
-  familyDoctorId: String,
+  familyDoctorId: Schema.Types.ObjectId,
 });
 
 const User = mongoose.model('User', userSchema);
