@@ -35,7 +35,6 @@ const createMockData = async () => {
   // console.log(hospitals);
 
   await createDoctors(
-    10,
     hospitals.map((hospital) => hospital.id)
   );
 

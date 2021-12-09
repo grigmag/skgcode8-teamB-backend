@@ -17,11 +17,8 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
   // const collections = await mongoose.connection.db.listCollections().toArray();
   // console.log(collections);
 
-  if (process.env.DROP_DB === 'true') {
-    await dropAllCollections();
-  }
-
   if (process.env.CREATE_MOCK_DATA === 'true') {
+    await dropAllCollections();
     await createMockData();
   }
 });
