@@ -23,7 +23,6 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
   }
 });
 
-
 mongoose.connection.on('error', (err) => {
   console.error('connection error: ', err);
 });
@@ -32,7 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('Welcome to HealthApp API!');
+  res.send({ message: 'Welcome to HealthApp API!' });
 });
 
 app.use('/', authRouter);

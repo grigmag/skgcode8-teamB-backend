@@ -7,7 +7,7 @@ const logError = (err, req, res, next) => {
 
 const handleError = (err, req, res, next) => {
   if (err) {
-    res.status(500).send(err.message || 'Server Error');
+    res.status(500).send({ message: err.message || 'Server Error' });
   }
 };
 
