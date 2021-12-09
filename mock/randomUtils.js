@@ -45,7 +45,7 @@ const randomDatesArray = (amount, start, end) => {
   return arr;
 };
 
-const randomAppointmentDay = (start, end) => {
+const randomAppointmentDate = (start, end) => {
   let date = randomDate(start, end);
   formatDate(date);
 
@@ -70,5 +70,5 @@ module.exports = {
   randomMobileNumber,
   randomDate,
   randomDatesArray,
-  randomAppointmentDay,
+  randomAppointmentDate,
 };

@@ -1,6 +1,6 @@
 const Appointment = require('../models/appointment');
 const { specialtyToDepartment } = require('./dataUtils');
-const { randomArrayElement, randomAppointmentDay } = require('./randomUtils');
+const { randomArrayElement, randomAppointmentDate } = require('./randomUtils');
 
 const createAppointments = async (amount = 10, userIds = [], doctors = []) => {
   const oldAppointments = await Appointment.find();
@@ -14,7 +14,7 @@ const createAppointments = async (amount = 10, userIds = [], doctors = []) => {
       await Appointment.create({
         userId: userIds.length && randomArrayElement(userIds),
         doctorId: doctor && doctor.id,
-        date: randomAppointmentDay('2021-01-01', '2021-12-31'),
+        date: randomAppointmentDate('2021-01-01', '2021-12-31'),
         hospitalId: doctor && doctor.hospitalId,
         department:
           doctor && doctor.specialty && specialtyToDepartment[doctor.specialty],
