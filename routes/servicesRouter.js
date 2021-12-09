@@ -8,6 +8,7 @@ const { logError, handleError } = require('../middlewares/errorHandling');
 const Prescription = require('../models/prescription');
 const Appointment = require('../models/appointment');
 const Diagnosis = require('../models/diagnosis');
+const Doctor = require('../models/doctor');
 
 const {
   createTimeSlotsArray,
@@ -51,6 +52,16 @@ router.get('/appointments/available', async (req, res) => {
   const startDate = moment(date).startOf('day');
   const endDate = moment(startDate).add(1, 'days');
 
+  const departmentDoctors = await Doctor.find(
+    {
+      hospitalId,
+      department,
+    },
+    'id'
+  );
+
+  // console.log('doctors', departmentDoctors);
+
   const bookedAppointments = await Appointment.find(
     {
       hospitalId,
@@ -60,7 +71,7 @@ router.get('/appointments/available', async (req, res) => {
         $lt: endDate.format('YYYY-MM-DD'),
       },
     },
-    'date'
+    'date doctorId'
   );
 
   // console.log('Booked Appointments', bookedAppointments);
@@ -72,10 +83,14 @@ router.get('/appointments/available', async (req, res) => {
   // console.log('Booked Appointment Dates', bookedAppointmentsDates);
   const timeSlots = createTimeSlotsArray(date, 9, 17);
 
-  const availableHours = subtractAppointmentsFromSlots(
-    timeSlots,
-    bookedAppointmentsDates
-  ).map((time) => time.format());
+  const availableHours = timeSlots
+    .filter((timeSlot) => {
+      const appointmentsAtTimeSlot = bookedAppointmentsDates.filter(
+        (appointmentDate) => appointmentDate.isSame(timeSlot, 'minute')
+      );
+      return appointmentsAtTimeSlot.length < departmentDoctors.length;
+    })
+    .map((time) => time.format());
 
   // console.log('availableHours', availableHours);
 

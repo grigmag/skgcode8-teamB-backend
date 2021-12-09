@@ -15,9 +15,9 @@ async function createDoctors(hospitalIds = []) {
           lastName: 'Doctor ' + i,
           phoneNumber: randomPhoneNumber(),
           address: 'Egnatias ' + (i + 1),
-          hospitalId,
-          department: element.department,
           specialty: element.specialty,
+          hospitalId: hospitalId,
+          department: element.department,
         });
       }
     }
