@@ -9,6 +9,11 @@ const Prescription = require('../models/prescription');
 const Appointment = require('../models/appointment');
 const Diagnosis = require('../models/diagnosis');
 
+const {
+  createTimeSlotsArray,
+  subtractAppointmentsFromSlots,
+} = require('../utils/dateUtils');
+
 router.use(authorizeToken);
 
 router.get('/prescriptions', async (req, res, next) => {
@@ -65,33 +70,12 @@ router.get('/appointments/available', async (req, res) => {
   );
 
   // console.log('Booked Appointment Dates', bookedAppointmentsDates);
+  const timeSlots = createTimeSlotsArray(date, 9, 17);
 
-  const createTimeSlotsArray = (date) => {
-    // assuming working hours of  9 - 17
-    const arr = [];
-    const startTime = moment(date).startOf('day').hours(9);
-    const endTime = moment(startTime).hours(17);
-
-    const tempTime = moment(startTime);
-
-    while (tempTime < endTime) {
-      arr.push(moment(tempTime));
-      tempTime.add(30, 'minutes');
-    }
-
-    return arr;
-  };
-
-  const timeSlots = createTimeSlotsArray(date);
-
-  // console.log('timeSlots', timeSlots);
-
-  const availableHours = timeSlots
-    .filter(
-      (slot) =>
-        !bookedAppointmentsDates.some((time) => time.isSame(slot, 'minute'))
-    )
-    .map((time) => time.format());
+  const availableHours = subtractAppointmentsFromSlots(
+    timeSlots,
+    bookedAppointmentsDates
+  ).map((time) => time.format());
 
   // console.log('availableHours', availableHours);
 
