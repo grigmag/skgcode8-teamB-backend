@@ -1,5 +1,19 @@
 const moment = require('moment');
 
+/** Rounds provided moment date to the previous half hour
+ * @param date moment date
+ */
+const roundDateToHalfHour = (date) => {
+  date.startOf('minute');
+  if (date.minutes() < 30) {
+    date.minutes(0);
+  } else {
+    date.minutes(30);
+  }
+
+  return date;
+};
+
 /**
  * Creates an array of moment date objects between workdayStart hour and workdayEnd hour in half hour intervals
  * @param date Date object, string, or moment date. Only year, month, date will be used.
@@ -36,4 +50,8 @@ const subtractAppointmentsFromSlots = (timeSlots, bookedAppointmentsDates) => {
   // .map((time) => time.format());
 };
 
-module.exports = { createTimeSlotsArray, subtractAppointmentsFromSlots };
+module.exports = {
+  roundDateToHalfHour,
+  createTimeSlotsArray,
+  subtractAppointmentsFromSlots,
+};

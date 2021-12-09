@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { roundDateToHalfHour } = require('./dateUtils');
 
 /** Returns a random integer between AND INCLUDING min and max */
 const randomInt = (min, max) =>
@@ -61,9 +62,9 @@ const randomDatesArray = (amount, start, end) => {
 };
 
 /**
- * Returns a random date between start and end, 
+ * Returns a random date between start and end,
  * with hours between workdayStart and workdayEnd
- * and minutes rounded to previous half hour. 
+ * and minutes rounded to previous half hour.
  * @param start moment date or date string
  * @param end moment date or date string
  * @param workdayStart number (the starting hour of the workday -> 0 to 23)
@@ -79,16 +80,6 @@ const randomAppointmentDate = (start, end, workdayStart, workdayEnd) => {
   }
 
   roundDateToHalfHour(date);
-
-  return date;
-};
-
-const roundDateToHalfHour = (date) => {
-  if (date.minutes() < 30) {
-    date.minutes(0);
-  } else {
-    date.minutes(30);
-  }
 
   return date;
 };
