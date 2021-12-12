@@ -25,6 +25,7 @@ const hospitalSchema = new Schema({
   email: {
     type: String,
     require: [true, 'email is required'],
+    lowercase: true,
   },
 });
 

@@ -5,6 +5,9 @@ const userSchema = new Schema({
   healthIdNumber: {
     type: String,
     required: [true, 'health id number is required'],
+    unique: true,
+    maxlength: 11,
+    minlength: 11,
   },
   password: {
     type: String,
