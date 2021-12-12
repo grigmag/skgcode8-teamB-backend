@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 const servicesRouter = require('./routes/servicesRouter');
 const authRouter = require('./routes/authRouter');
+const hospitalsRouter = require('./routes/hospitalsRouter');
 
 const createMockData = require('./mock/createMockData');
 const dropAllCollections = require('./dropAllCollections');
@@ -36,6 +37,7 @@ app.get('/', (req, res) => {
 
 app.use('/', authRouter);
 app.use('/services', servicesRouter);
+app.use('/hospitals', hospitalsRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

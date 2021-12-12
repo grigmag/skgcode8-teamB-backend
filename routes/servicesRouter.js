@@ -13,7 +13,6 @@ const Doctor = require('../models/doctor');
 const {
   roundDateToHalfHour,
   createTimeSlotsArray,
-  subtractAppointmentsFromSlots,
 } = require('../utils/dateUtils');
 const { randomArrayElement } = require('../utils/randomUtils');
 
