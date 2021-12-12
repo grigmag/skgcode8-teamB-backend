@@ -10,6 +10,8 @@ const authRouter = require('./routes/authRouter');
 const hospitalsRouter = require('./routes/hospitalsRouter');
 const doctorsRouter = require('./routes/doctorsRouter');
 
+const { logError, handleError } = require('./middlewares/errorHandling');
+
 const createMockData = require('./mock/createMockData');
 const dropAllCollections = require('./dropAllCollections');
 
@@ -40,6 +42,14 @@ app.use('/', authRouter);
 app.use('/services', servicesRouter);
 app.use('/hospitals', hospitalsRouter);
 app.use('/doctors', doctorsRouter);
+
+app.use('*', (req, res, next) => {
+  const err = new Error('Resource not found');
+  err.status = 404;
+  next(err);
+});
+
+app.use(logError, handleError);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

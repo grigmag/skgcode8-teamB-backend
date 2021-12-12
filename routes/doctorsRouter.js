@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const authorizeToken = require('../middlewares/tokenAuth');
-const { logError, handleError } = require('../middlewares/errorHandling');
 
 const Doctor = require('../models/doctor');
 
@@ -31,7 +30,5 @@ router.get('/:id', async (req, res, next) => {
     next(err);
   }
 });
-
-router.use(logError, handleError);
 
 module.exports = router;

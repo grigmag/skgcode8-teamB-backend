@@ -3,7 +3,6 @@ const router = express.Router();
 const moment = require('moment');
 
 const authorizeToken = require('../middlewares/tokenAuth');
-const { logError, handleError } = require('../middlewares/errorHandling');
 
 const Prescription = require('../models/prescription');
 const Appointment = require('../models/appointment');
@@ -161,7 +160,5 @@ router.post('/appointments', async (req, res, next) => {
     next(err);
   }
 });
-
-router.use(logError, handleError);
 
 module.exports = router;
