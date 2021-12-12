@@ -6,8 +6,7 @@ const userSchema = new Schema({
     type: String,
     required: [true, 'health id number is required'],
     unique: true,
-    maxlength: 11,
-    minlength: 11,
+    match: [/^d{11}$/, 'healthIdNumber should contain 11 digits.'],
   },
   password: {
     type: String,
