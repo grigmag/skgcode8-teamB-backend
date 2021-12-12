@@ -4,7 +4,6 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 
 const authorizeToken = require('../middlewares/tokenAuth');
-const { logError, handleError } = require('../middlewares/errorHandling');
 const User = require('../models/user');
 
 router.get('/profile', authorizeToken, async (req, res) => {
@@ -79,7 +78,5 @@ router.post('/login', async (req, res) => {
 //     next(err);
 //   }
 // });
-
-router.use(logError, handleError);
 
 module.exports = router;
