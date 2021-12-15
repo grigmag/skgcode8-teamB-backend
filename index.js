@@ -24,6 +24,7 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }, async () => {
   if (process.env.CREATE_MOCK_DATA === 'true') {
     await dropAllCollections();
     await createMockData();
+    console.log('Mock data created');
   }
 });
 

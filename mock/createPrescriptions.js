@@ -4,6 +4,7 @@ const {
   randomIntArray,
   randomDate,
 } = require('../utils/randomUtils');
+const { randomDoctorNameObj } = require('../utils/modelRandomUtils');
 
 const createPrescriptions = async (
   amount = 10,
@@ -13,7 +14,7 @@ const createPrescriptions = async (
   for (let i = 0; i < amount; i++) {
     await Prescription.create({
       userId: userIds.length && randomArrayElement(userIds),
-      doctorId: doctorIds.length && randomArrayElement(doctorIds),
+      doctor: doctorIds.length && (await randomDoctorNameObj(doctorIds)),
       title: 'Test Prescription ' + i,
       description: 'Test Prescription Description',
       drugCode: randomIntArray(8, 0, 9).join(''),

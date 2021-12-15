@@ -1,9 +1,6 @@
 const User = require('../models/user');
-const {
-  randomArrayElement,
-  randomDate,
-  randomIntArray,
-} = require('../utils/randomUtils');
+const { randomDate, randomIntArray } = require('../utils/randomUtils');
+const { randomDoctorNameObj } = require('../utils/modelRandomUtils');
 
 const createUsers = async (testUsersAmount = 10, familyDoctorIds = []) => {
   for (let i = 0; i < testUsersAmount; i++) {
@@ -16,9 +13,8 @@ const createUsers = async (testUsersAmount = 10, familyDoctorIds = []) => {
       email: `testuser${i}@test.com`,
       phoneNumber: '+30697123456' + i,
       bloodType: 'A-',
-      familyDoctorId: familyDoctorIds.length
-        ? randomArrayElement(familyDoctorIds)
-        : null, // ?
+      familyDoctor:
+        familyDoctorIds.length && (await randomDoctorNameObj(familyDoctorIds)),
     });
   }
 };
