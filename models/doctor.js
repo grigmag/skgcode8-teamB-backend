@@ -22,7 +22,10 @@ const doctorSchema = new Schema({
     type: String,
     required: [true, 'specialty is required'],
   },
-  hospitalId: Schema.Types.ObjectId,
+  hospital: {
+    id: Schema.Types.ObjectId,
+    name: String,
+  },
   department: String,
 });
 

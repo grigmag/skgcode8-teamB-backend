@@ -12,7 +12,10 @@ const appointmentSchema = new Schema({
     lastName: String,
   },
   date: { type: Date, required: [true, 'date is required'] },
-  hospitalId: Schema.Types.ObjectId,
+  hospital: {
+    id: Schema.Types.ObjectId,
+    name: String,
+  },
   department: String,
 });
 

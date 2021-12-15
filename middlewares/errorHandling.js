@@ -1,6 +1,6 @@
 const logError = (err, req, res, next) => {
   if (err) {
-    console.log(err.message || 'Error');
+    console.log('Logging error: ', err.message || 'Error');
   }
   next(err);
 };
