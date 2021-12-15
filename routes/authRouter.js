@@ -23,6 +23,13 @@ router.put('/profile', authorizeToken, async (req, res, next) => {
 
 router.post('/register', async (req, res, next) => {
   const { healthIdNumber, password, email } = req.body;
+  
+  if (typeof healthIdNumber !== 'string') {
+    res.status(400).send({
+      message: 'The property healthIdNumber should be a string.',
+    });
+    return;
+  }
 
   const user = await User.findOne({ healthIdNumber });
   if (!user) {

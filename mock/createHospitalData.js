@@ -10,6 +10,7 @@ const createHospitalData = async (amount = 10) => {
       phoneNumber: randomPhoneNumber(),
       address: `Tsimiski ${i + 1}`,
       city: 'Thessaloniki',
+      email: `hospital${i}@testmail.com`,
     });
   }
 };

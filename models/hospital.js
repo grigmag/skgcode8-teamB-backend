@@ -22,6 +22,11 @@ const hospitalSchema = new Schema({
     type: String,
     required: [true, 'phone number is required'],
   },
+  email: {
+    type: String,
+    require: [true, 'email is required'],
+    lowercase: true,
+  },
 });
 
 const Hospital = mongoose.model('Hospital', hospitalSchema);
