@@ -23,7 +23,7 @@ const prescriptionSchema = new Schema({
     required: [true, 'drug code is required'],
   },
   date: {
-    type: String,
+    type: Date,
     required: [true, 'date is required'],
   },
 });
