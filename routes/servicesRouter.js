@@ -8,6 +8,7 @@ const Prescription = require('../models/prescription');
 const Appointment = require('../models/appointment');
 const Diagnosis = require('../models/diagnosis');
 const Doctor = require('../models/doctor');
+const Hospital = require('../models/hospital');
 
 const {
   roundDateToHalfHour,
@@ -55,7 +56,7 @@ router.get('/appointments/available', async (req, res, next) => {
 
     const departmentDoctors = await Doctor.find(
       {
-        hospitalId,
+        'hospital.id': hospitalId,
         department,
       },
       'id'
@@ -65,14 +66,14 @@ router.get('/appointments/available', async (req, res, next) => {
 
     const bookedAppointments = await Appointment.find(
       {
-        hospitalId,
+        'hospital.id': hospitalId,
         department,
         date: {
           $gte: startDate.format('YYYY-MM-DD'),
           $lt: endDate.format('YYYY-MM-DD'),
         },
       },
-      'date doctorId'
+      'date'
     );
 
     // console.log('Booked Appointments', bookedAppointments);
@@ -105,10 +106,12 @@ router.post('/appointments', async (req, res, next) => {
   try {
     const { date, hospitalId, department } = req.body;
 
+    const hospital = await Hospital.findById(hospitalId);
+
     const roundedDate = roundDateToHalfHour(moment(date));
 
     const departmentDoctors = await Doctor.find({
-      hospitalId,
+      'hospital.id': hospitalId,
       department,
     });
 
@@ -116,14 +119,14 @@ router.post('/appointments', async (req, res, next) => {
 
     const bookedAppointments = await Appointment.find(
       {
-        hospitalId,
+        'hospital.id': hospitalId,
         department,
         date: {
           $gte: moment(roundedDate).subtract(1, 'minutes').format(),
           $lt: moment(roundedDate).add(1, 'minutes').format(),
         },
       },
-      'date doctorId'
+      'date doctor'
     );
 
     // console.log('bookedAppointments ', bookedAppointments);
@@ -131,7 +134,7 @@ router.post('/appointments', async (req, res, next) => {
     const availableDoctors = departmentDoctors.filter(
       (doctor) =>
         !bookedAppointments.some((appointment) =>
-          appointment.doctorId.equals(doctor.id)
+          appointment.doctor.id.equals(doctor.id)
         )
     );
 
@@ -144,9 +147,16 @@ router.post('/appointments', async (req, res, next) => {
 
       await Appointment.create({
         userId: req.user.id,
-        doctorId: appointedDoctor.id,
+        doctor: {
+          id: appointedDoctor.id,
+          firstName: appointedDoctor.firstName,
+          lastName: appointedDoctor.lastName,
+        },
         date: roundedDate.format(),
-        hospitalId: hospitalId,
+        hospital: {
+          id: hospital.id,
+          name: hospital.name,
+        },
         department: department,
       });
 

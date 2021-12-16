@@ -22,7 +22,11 @@ const userSchema = new Schema({
   },
   phoneNumber: String,
   bloodType: String,
-  familyDoctorId: Schema.Types.ObjectId,
+  familyDoctor: {
+    id: Schema.Types.ObjectId,
+    firstName: String,
+    lastName: String,
+  },
 });
 
 const User = mongoose.model('User', userSchema);

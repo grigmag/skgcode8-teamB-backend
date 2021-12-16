@@ -6,9 +6,10 @@ const prescriptionSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: [true, 'user id is required'],
   },
-  doctorId: {
-    type: Schema.Types.ObjectId,
-    required: [true, 'doctor id is required'],
+  doctor: {
+    id: Schema.Types.ObjectId,
+    firstName: String,
+    lastName: String,
   },
   title: {
     type: String,
