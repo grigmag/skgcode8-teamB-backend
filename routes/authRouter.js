@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const authorizeToken = require('../middlewares/tokenAuth');
 const User = require('../models/user');
+const Doctor = require('../models/doctor');
 
 router.get('/profile', authorizeToken, async (req, res) => {
   res.send(req.user);
@@ -12,6 +13,17 @@ router.get('/profile', authorizeToken, async (req, res) => {
 
 router.put('/profile', authorizeToken, async (req, res, next) => {
   try {
+    if (req.body.familyDoctor) {
+      const doctor = await Doctor.findById(req.body.familyDoctor.id);
+      if (!doctor) {
+        return res.status(400).send({ message: 'Doctor does not exist.' });
+      } else if (doctor.specialty !== 'Family Doctor') {
+        return res
+          .status(400)
+          .send({ message: 'Doctor is not a family doctor.' });
+      }
+    }
+
     await User.findByIdAndUpdate(req.user.id, req.body, {
       runValidators: true,
     });
