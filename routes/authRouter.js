@@ -12,8 +12,9 @@ router.get('/profile', authorizeToken, async (req, res) => {
 
 router.put('/profile', authorizeToken, async (req, res, next) => {
   try {
-    Object.assign(req.user, req.body);
-    req.user.save();
+    await User.findByIdAndUpdate(req.user.id, req.body, {
+      runValidators: true,
+    });
 
     res.status(200).send({ message: 'Profile updated successfully' });
   } catch (err) {
@@ -23,7 +24,7 @@ router.put('/profile', authorizeToken, async (req, res, next) => {
 
 router.post('/register', async (req, res, next) => {
   const { healthIdNumber, password, email } = req.body;
-  
+
   if (typeof healthIdNumber !== 'string') {
     res.status(400).send({
       message: 'The property healthIdNumber should be a string.',
