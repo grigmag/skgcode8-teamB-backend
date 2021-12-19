@@ -21,15 +21,19 @@ router.put('/profile', authorizeToken, async (req, res, next) => {
   try {
     let doctor;
     if (req.body.familyDoctor) {
-      doctor = await Doctor.findById(req.body.familyDoctor.id);
-      if (!doctor) {
-        return res.status(400).send({
-          message: 'Doctor id not provided or doctor does not exist.',
-        });
-      } else if (doctor.specialty !== familyDoctorSpecialty) {
-        return res
-          .status(400)
-          .send({ message: 'Doctor is not a family doctor.' });
+      if (!req.body.familyDoctor.id) {
+        return res.status(400).send({ message: 'Doctor id not provided.' });
+      } else {
+        doctor = await Doctor.findById(req.body.familyDoctor.id);
+        if (!doctor) {
+          return res.status(404).send({
+            message: 'Doctor with this id not found.',
+          });
+        } else if (doctor.specialty !== familyDoctorSpecialty) {
+          return res
+            .status(400)
+            .send({ message: 'Doctor is not a family doctor.' });
+        }
       }
     }
 
@@ -74,7 +78,7 @@ router.post('/register', async (req, res, next) => {
         email,
         password: encryptedPassword,
       });
-      res.send({ message: 'User Registered successfully' });
+      res.send({ message: 'User registered successfully' });
     } catch (err) {
       next(err);
     }
@@ -106,10 +110,12 @@ router.post('/login', async (req, res) => {
         accessToken: token,
       });
     } else {
-      return res.status(400).send({ message: 'Password is invalid.' });
+      return res.status(401).send({ message: 'Password is invalid.' });
     }
   } else {
-    return res.status(404).send({ message: 'Health ID number is invalid.' });
+    return res
+      .status(404)
+      .send({ message: 'User with this health id number not found.' });
   }
 });
 

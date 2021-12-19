@@ -22,9 +22,7 @@ router.get('/:id', async (req, res, next) => {
     if (doctor) {
       res.send(doctor);
     } else {
-      res
-        .status(400)
-        .send({ message: 'Could not find a doctor with this id.' });
+      res.status(404).send({ message: 'Doctor with this id not found.' });
     }
   } catch (err) {
     next(err);

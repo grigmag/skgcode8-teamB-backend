@@ -9,7 +9,7 @@ const handleError = (err, req, res, next) => {
   if (err) {
     res
       .status(err.status || 400)
-      .send({ message: err.message || 'Unknown Error' });
+      .send({ message: err.message || 'Bad Request' });
   }
 };
 
