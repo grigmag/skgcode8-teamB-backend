@@ -7,24 +7,40 @@ const authorizeToken = require('../middlewares/tokenAuth');
 const User = require('../models/user');
 const Doctor = require('../models/doctor');
 
+const { familyDoctorSpecialty } = require('../utils/dataUtils');
+
 router.get('/profile', authorizeToken, async (req, res) => {
   res.send(req.user);
 });
 
 router.put('/profile', authorizeToken, async (req, res, next) => {
   try {
+    let doctor;
     if (req.body.familyDoctor) {
-      const doctor = await Doctor.findById(req.body.familyDoctor.id);
+      doctor = await Doctor.findById(req.body.familyDoctor.id);
       if (!doctor) {
-        return res.status(400).send({ message: 'Doctor does not exist.' });
-      } else if (doctor.specialty !== 'Family Doctor') {
+        return res.status(400).send({
+          message: 'Doctor id not provided or doctor does not exist.',
+        });
+      } else if (doctor.specialty !== familyDoctorSpecialty) {
         return res
           .status(400)
           .send({ message: 'Doctor is not a family doctor.' });
       }
     }
 
-    await User.findByIdAndUpdate(req.user.id, req.body, {
+    const updatedUser = doctor
+      ? {
+          ...req.body,
+          familyDoctor: {
+            id: doctor.id,
+            firstName: doctor.firstName,
+            lastName: doctor.lastName,
+          },
+        }
+      : req.body;
+
+    await User.findByIdAndUpdate(req.user.id, updatedUser, {
       runValidators: true,
     });
 
