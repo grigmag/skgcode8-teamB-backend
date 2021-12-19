@@ -5,7 +5,8 @@ const { randomDoctorNameObj } = require('../utils/modelRandomUtils');
 const createUsers = async (testUsersAmount = 10, familyDoctorIds = []) => {
   for (let i = 0; i < testUsersAmount; i++) {
     await User.create({
-      healthIdNumber: randomIntArray(11, 0, 9).join(''),
+      healthIdNumber:
+        i === 0 ? '12345678901' : randomIntArray(11, 0, 9).join(''),
       password: 'asdfasdf',
       firstName: 'Test',
       lastName: 'User' + i,

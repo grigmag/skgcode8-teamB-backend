@@ -5,15 +5,47 @@ const jwt = require('jsonwebtoken');
 
 const authorizeToken = require('../middlewares/tokenAuth');
 const User = require('../models/user');
+const Doctor = require('../models/doctor');
+
+const { familyDoctorSpecialty } = require('../utils/dataUtils');
 
 router.get('/profile', authorizeToken, async (req, res) => {
-  res.send(req.user);
+  const responseData = req.user.toObject();
+  delete responseData.password;
+
+  res.send(responseData);
 });
 
 router.put('/profile', authorizeToken, async (req, res, next) => {
   try {
-    Object.assign(req.user, req.body);
-    req.user.save();
+    let doctor;
+    if (req.body.familyDoctor) {
+      doctor = await Doctor.findById(req.body.familyDoctor.id);
+      if (!doctor) {
+        return res.status(400).send({
+          message: 'Doctor id not provided or doctor does not exist.',
+        });
+      } else if (doctor.specialty !== familyDoctorSpecialty) {
+        return res
+          .status(400)
+          .send({ message: 'Doctor is not a family doctor.' });
+      }
+    }
+
+    const updatedUser = doctor
+      ? {
+          ...req.body,
+          familyDoctor: {
+            id: doctor.id,
+            firstName: doctor.firstName,
+            lastName: doctor.lastName,
+          },
+        }
+      : req.body;
+
+    await User.findByIdAndUpdate(req.user.id, updatedUser, {
+      runValidators: true,
+    });
 
     res.status(200).send({ message: 'Profile updated successfully' });
   } catch (err) {
@@ -23,7 +55,7 @@ router.put('/profile', authorizeToken, async (req, res, next) => {
 
 router.post('/register', async (req, res, next) => {
   const { healthIdNumber, password, email } = req.body;
-  
+
   if (typeof healthIdNumber !== 'string') {
     res.status(400).send({
       message: 'The property healthIdNumber should be a string.',
@@ -59,9 +91,14 @@ router.post('/login', async (req, res) => {
       expiresIn: '1d',
     });
 
-    res
-      .status(200)
-      .send({ user, message: 'Login Successful', accessToken: token });
+    const responseUser = user.toObject();
+    delete responseUser.password;
+
+    res.status(200).send({
+      user: responseUser,
+      message: 'Login Successful',
+      accessToken: token,
+    });
   } else {
     return res
       .status(404)

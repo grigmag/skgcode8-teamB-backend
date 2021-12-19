@@ -49,10 +49,32 @@ router.get('/appointments', async (req, res, next) => {
 
 router.get('/appointments/available', async (req, res, next) => {
   try {
-    const { hospitalId, department, date } = req.body;
+    const { hospitalId, department, date } = req.query;
+
+    if (
+      typeof hospitalId !== 'string' ||
+      typeof department !== 'string' ||
+      typeof date !== 'string'
+    ) {
+      return res.status(400).send({
+        message:
+          'Query parameters hospitalId, department and date are required',
+      });
+    } else if (!date.match(/^\d{4}-\d{2}-\d{2}$/) || !moment(date).isValid()) {
+      return res.status(400).send({
+        message:
+          'Date is invalid. Date should be supplied in YYYY-MM-DD format',
+      });
+    }
 
     const startDate = moment(date).startOf('day');
     const endDate = moment(startDate).add(1, 'days');
+
+    if (moment().isSameOrAfter(startDate)) {
+      return res.status(400).send({
+        message: `Pick a date beginning from tomorrow.`,
+      });
+    }
 
     const departmentDoctors = await Doctor.find(
       {
@@ -61,6 +83,12 @@ router.get('/appointments/available', async (req, res, next) => {
       },
       'id'
     );
+
+    if (!departmentDoctors.length) {
+      return res.status(400).send({
+        message: 'Invalid hospitalId or department.',
+      });
+    }
 
     // console.log('doctors', departmentDoctors);
 
@@ -106,14 +134,53 @@ router.post('/appointments', async (req, res, next) => {
   try {
     const { date, hospitalId, department } = req.body;
 
+    if (
+      typeof date !== 'string' ||
+      typeof hospitalId !== 'string' ||
+      typeof department !== 'string'
+    ) {
+      return res.status(400).send({
+        message: 'Properties hospitalId, department and date are required',
+      });
+    } else if (!moment(date).isValid()) {
+      return res.status(400).send({
+        message: 'Date is invalid.',
+      });
+    }
+
     const hospital = await Hospital.findById(hospitalId);
 
+    if (!hospital) {
+      return res.status(400).send({
+        message: 'Invalid hospitalId',
+      });
+    }
+
     const roundedDate = roundDateToHalfHour(moment(date));
+
+    if (moment().isSameOrAfter(moment(roundedDate).startOf('day'))) {
+      return res.status(400).send({
+        message: `Pick a date beginning from tomorrow.`,
+      });
+    }
+
+    if (roundedDate.hour() >= 17 || roundedDate.hour() < 9) {
+      return res.status(400).send({
+        message:
+          'Appointment time should be within working hours of 09:00 - 17:00.',
+      });
+    }
 
     const departmentDoctors = await Doctor.find({
       'hospital.id': hospitalId,
       department,
     });
+
+    if (!departmentDoctors.length) {
+      return res.status(400).send({
+        message: 'Invalid hospitalId or department',
+      });
+    }
 
     // console.log('departmentDoctors ', departmentDoctors);
 
@@ -145,7 +212,7 @@ router.post('/appointments', async (req, res, next) => {
 
       // console.log('appointedDoctor ', appointedDoctor);
 
-      await Appointment.create({
+      const appointment = await Appointment.create({
         userId: req.user.id,
         doctor: {
           id: appointedDoctor.id,
@@ -160,11 +227,12 @@ router.post('/appointments', async (req, res, next) => {
         department: department,
       });
 
-      res
-        .status(200)
-        .send({ message: 'Appointment scheduled', doctor: appointedDoctor });
+      res.status(200).send({ message: 'Appointment scheduled', appointment });
     } else {
-      res.status(400).send({ message: 'No doctors available at that time' });
+      res.status(400).send({
+        message:
+          'No doctors available at that time. Choose another date or time.',
+      });
     }
   } catch (err) {
     next(err);
