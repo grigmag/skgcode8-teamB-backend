@@ -16,7 +16,8 @@ const createPrescriptions = async (
       userId: userIds.length && randomArrayElement(userIds),
       doctor: doctorIds.length && (await randomDoctorNameObj(doctorIds)),
       title: 'Test Prescription ' + i,
-      description: 'Test Prescription Description',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       drugCode: randomIntArray(8, 0, 9).join(''),
       date: randomDate('2021-01-01'),
     });
