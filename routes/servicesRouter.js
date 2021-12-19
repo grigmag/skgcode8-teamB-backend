@@ -227,9 +227,7 @@ router.post('/appointments', async (req, res, next) => {
         department: department,
       });
 
-      res
-        .status(200)
-        .send({ message: 'Appointment scheduled', data: appointment });
+      res.status(200).send({ message: 'Appointment scheduled', appointment });
     } else {
       res.status(400).send({
         message:
