@@ -10,7 +10,10 @@ const Doctor = require('../models/doctor');
 const { familyDoctorSpecialty } = require('../utils/dataUtils');
 
 router.get('/profile', authorizeToken, async (req, res) => {
-  res.send(req.user);
+  const responseData = req.user.toObject();
+  delete responseData.password;
+
+  res.send(responseData);
 });
 
 router.put('/profile', authorizeToken, async (req, res, next) => {
@@ -88,9 +91,14 @@ router.post('/login', async (req, res) => {
       expiresIn: '1d',
     });
 
-    res
-      .status(200)
-      .send({ user, message: 'Login Successful', accessToken: token });
+    const responseUser = user.toObject();
+    delete responseUser.password;
+
+    res.status(200).send({
+      user: responseUser,
+      message: 'Login Successful',
+      accessToken: token,
+    });
   } else {
     return res
       .status(404)
