@@ -72,7 +72,7 @@ router.get('/appointments/available', async (req, res, next) => {
 
     if (moment().isSameOrAfter(startDate)) {
       return res.status(400).send({
-        message: `Pick a date beginning from tomorrow.`,
+        message: 'Pick a date beginning from tomorrow.',
       });
     }
 
@@ -160,7 +160,7 @@ router.post('/appointments', async (req, res, next) => {
 
     if (moment().isSameOrAfter(moment(roundedDate).startOf('day'))) {
       return res.status(400).send({
-        message: `Pick a date beginning from tomorrow.`,
+        message: 'Pick a date beginning from tomorrow.',
       });
     }
 

@@ -9,7 +9,8 @@ const createDiagnoses = async (amount = 10, userIds = [], doctorIds = []) => {
       doctor: doctorIds.length && (await randomDoctorNameObj(doctorIds)),
       date: randomDate('2021-01-01', '2021-12-31'),
       examination: 'Test Diagnosis Examination',
-      results: 'Test Diagnosis Results',
+      results:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
       diagnosis: 'Test Diagnosis ' + i,
     });
   }

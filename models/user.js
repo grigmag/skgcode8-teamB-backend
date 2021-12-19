@@ -23,9 +23,9 @@ const userSchema = new Schema({
   phoneNumber: String,
   bloodType: String,
   familyDoctor: {
-    id: { type: Schema.Types.ObjectId, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    id: Schema.Types.ObjectId,
+    firstName: String,
+    lastName: String,
   },
 });
 

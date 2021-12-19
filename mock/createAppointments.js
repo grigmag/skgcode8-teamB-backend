@@ -18,7 +18,12 @@ const createAppointments = async (amount = 10, userIds = [], doctors = []) => {
         firstName: doctor.firstName,
         lastName: doctor.lastName,
       },
-      date: randomAppointmentDate('2022-01-01', '2022-01-02', 9, 17),
+      date: randomAppointmentDate(
+        '2022-01-01',
+        '2022-01-03',
+        9,
+        17
+      ).toISOString(),
       hospital: hospital && {
         id: hospital.id,
         name: hospital.name,

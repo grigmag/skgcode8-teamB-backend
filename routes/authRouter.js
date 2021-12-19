@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const authorizeToken = require('../middlewares/tokenAuth');
 const User = require('../models/user');
@@ -20,15 +21,19 @@ router.put('/profile', authorizeToken, async (req, res, next) => {
   try {
     let doctor;
     if (req.body.familyDoctor) {
-      doctor = await Doctor.findById(req.body.familyDoctor.id);
-      if (!doctor) {
-        return res.status(400).send({
-          message: 'Doctor id not provided or doctor does not exist.',
-        });
-      } else if (doctor.specialty !== familyDoctorSpecialty) {
-        return res
-          .status(400)
-          .send({ message: 'Doctor is not a family doctor.' });
+      if (!req.body.familyDoctor.id) {
+        return res.status(400).send({ message: 'Doctor id not provided.' });
+      } else {
+        doctor = await Doctor.findById(req.body.familyDoctor.id);
+        if (!doctor) {
+          return res.status(404).send({
+            message: 'Doctor with this id not found.',
+          });
+        } else if (doctor.specialty !== familyDoctorSpecialty) {
+          return res
+            .status(400)
+            .send({ message: 'Doctor is not a family doctor.' });
+        }
       }
     }
 
@@ -56,6 +61,8 @@ router.put('/profile', authorizeToken, async (req, res, next) => {
 router.post('/register', async (req, res, next) => {
   const { healthIdNumber, password, email } = req.body;
 
+  const encryptedPassword = bcrypt.hashSync(password, 8);
+
   if (typeof healthIdNumber !== 'string') {
     res.status(400).send({
       message: 'The property healthIdNumber should be a string.',
@@ -69,9 +76,9 @@ router.post('/register', async (req, res, next) => {
       await User.create({
         healthIdNumber,
         email,
-        password,
+        password: encryptedPassword,
       });
-      res.send({ message: 'User Registered successfully' });
+      res.send({ message: 'User registered successfully' });
     } catch (err) {
       next(err);
     }
@@ -85,24 +92,30 @@ router.post('/register', async (req, res, next) => {
 router.post('/login', async (req, res) => {
   const { healthIdNumber, password } = req.body;
 
-  const user = await User.findOne({ healthIdNumber, password });
+  const user = await User.findOne({ healthIdNumber });
   if (user) {
-    const token = jwt.sign({ id: user.id }, process.env.API_SECRET, {
-      expiresIn: '1d',
-    });
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
 
-    const responseUser = user.toObject();
-    delete responseUser.password;
+    if (passwordIsValid) {
+      const token = jwt.sign({ id: user.id }, process.env.API_SECRET, {
+        expiresIn: '1d',
+      });
 
-    res.status(200).send({
-      user: responseUser,
-      message: 'Login Successful',
-      accessToken: token,
-    });
+      const responseUser = user.toObject();
+      delete responseUser.password;
+
+      return res.status(200).send({
+        user: responseUser,
+        message: 'Login Successful',
+        accessToken: token,
+      });
+    } else {
+      return res.status(401).send({ message: 'Password is invalid.' });
+    }
   } else {
     return res
       .status(404)
-      .send({ message: 'Health ID number or password is invalid.' });
+      .send({ message: 'User with this health id number not found.' });
   }
 });
 
