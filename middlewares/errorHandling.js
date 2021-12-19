@@ -8,8 +8,8 @@ const logError = (err, req, res, next) => {
 const handleError = (err, req, res, next) => {
   if (err) {
     res
-      .status(err.status || 500)
-      .send({ message: err.message || 'Server Error' });
+      .status(err.status || 400)
+      .send({ message: err.message || 'Unknown Error' });
   }
 };
 
