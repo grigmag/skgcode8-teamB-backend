@@ -37,16 +37,22 @@ router.put('/profile', authorizeToken, async (req, res, next) => {
       }
     }
 
-    const updatedUser = doctor
-      ? {
-          ...req.body,
-          familyDoctor: {
-            id: doctor.id,
-            firstName: doctor.firstName,
-            lastName: doctor.lastName,
-          },
-        }
-      : req.body;
+    let encryptedPassword;
+    if (req.body.password) {
+      encryptedPassword = bcrypt.hashSync(req.body.password, 8);
+    }
+
+    const updatedUser = {
+      ...req.body,
+      ...(encryptedPassword && { password: encryptedPassword }),
+      ...(doctor && {
+        familyDoctor: {
+          id: doctor.id,
+          firstName: doctor.firstName,
+          lastName: doctor.lastName,
+        },
+      }),
+    };
 
     await User.findByIdAndUpdate(req.user.id, updatedUser, {
       runValidators: true,
